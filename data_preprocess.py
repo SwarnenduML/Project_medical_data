@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from configparser import ConfigParser
 
 class DataPreprocess(object):
     '''
@@ -8,6 +9,10 @@ class DataPreprocess(object):
     def __init__(self, data, time_in_middle):
         self.data = data
         self.time_in_middle = time_in_middle
+        config_object = ConfigParser()
+        config_object.read("config.ini")
+        self.time_in_middle = int(config_object["data"]["time_in_middle"])
+        self.time_trail_preceed = float(config_object["data"]["time_trail_preceed"])
 
     def count_dups(self,nums):
         element = []
@@ -24,7 +29,8 @@ class DataPreprocess(object):
         element.append(nums[i+1])
         return element,freque
 
-    def col_details(self,df):
+    def col_details(self):
+        df = self.data
         valid_col = []
         for col in df.columns:
             elem, dups = self.count_dups(df[col])
@@ -45,3 +51,29 @@ class DataPreprocess(object):
                 valid_col.append(col)
 
         return valid_col
+
+    def start_end(self):
+        '''
+        This function would determine the starting points and the ending points in the valid columns
+        :return: The start and end points of the data
+        '''
+        valid_col = self.col_details()
+        data = self.data[valid_col]
+        start_index = []
+        end_index = []
+        for c in data.columns:
+            elem, dups = self.count_dups(data[c])
+            if math.isnan(elem[0]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+                start_index.append(dups[0])
+            elif math.isnan(elem[0]):
+                print("Too much NULLs in the front for column "+ c)
+                start_index.append(data.shape[0])
+            if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+                end_index.append(dups[-1])
+            elif math.isnan(elem[-1]):
+                print("Too much NULLs at the back for column " + c)
+                end_index.append(data.shape[0])
+        return start_index, end_index
+
+
+

@@ -6,11 +6,13 @@ from sklearn import linear_model, metrics
 import math
 from sklearn.metrics import mean_squared_error
 from configparser import ConfigParser
+import config_file_creation
 
 def main_prog():
+    config_file_name = config_file_creation.create_config_file()
     # Read config.ini file
     config_object = ConfigParser()
-    config_object.read("config.ini")
+    config_object.read(config_file_name)
 
     config_param = config_object["data"]
     folder_to_read = "C:/Users/sengupta/Downloads/erizt_data"
@@ -21,7 +23,16 @@ def main_prog():
     data = pd.read_csv(file)
     data = data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
 
-    valid_col = data_preprocess.DataPreprocess(data, config_param["time_in_middle"])
+    data_preprocess_obj = data_preprocess.DataPreprocess(data, int(config_param["time_in_middle"]))
+    valid_col = data_preprocess_obj.col_details()
+    data = data[valid_col]
+
+    start, end = data_preprocess_obj.start_end()
+    start_index = max(start,default=0)
+    end_index = min(end, default=-1)
+
+    final_data = data[start_index:end_index]
+
 
 
 
