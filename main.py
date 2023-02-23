@@ -5,6 +5,7 @@ import data_preprocess
 from configparser import ConfigParser
 import config_file_creation
 import data_transform
+import train__test_data_creation
 
 def main_prog():
     config_file_name = config_file_creation.create_config_file()
@@ -36,6 +37,11 @@ def main_prog():
         fwd_shift_data = fwd_shift_obj.shifting("fwd")
         rev_shift_obj =  data_transform.DataTransform(final_data[c], config_object)
         rev_shift_data = rev_shift_obj.shifting("bck")
+
+        train_test_ds_creation_obj = train__test_data_creation.TrainTestDSCreation(fwd_shift_data, rev_shift_data, config_object)
+        train_ds_fwd, train_ds_rev = train_test_ds_creation_obj.train_ds()
+        test_ds_fwd, test_ds_rev = train_test_ds_creation_obj.test_ds()
+
 
 
 
