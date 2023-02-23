@@ -6,7 +6,8 @@ def create_config_file():
 
     config_object["data"] = {
         "time_in_middle": 20,
-        "time_trail_preceed": 1#0.05
+        "time_trail_preceed": 1, #0.05
+        "shifting" : 4
     }
     config_file_name = 'config.ini'
     #Write the above sections to config.ini file

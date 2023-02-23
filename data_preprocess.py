@@ -6,11 +6,8 @@ class DataPreprocess(object):
     '''
     This is where all the preprocessing of the data would happen
     '''
-    def __init__(self, data, time_in_middle):
+    def __init__(self, data, config_object):
         self.data = data
-        self.time_in_middle = time_in_middle
-        config_object = ConfigParser()
-        config_object.read("config.ini")
         self.time_in_middle = int(config_object["data"]["time_in_middle"])
         self.time_trail_preceed = float(config_object["data"]["time_trail_preceed"])
 

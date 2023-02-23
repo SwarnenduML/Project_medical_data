@@ -1,12 +1,10 @@
 import pandas as pd
 import os
+
 import data_preprocess
-import math
-from sklearn import linear_model, metrics
-import math
-from sklearn.metrics import mean_squared_error
 from configparser import ConfigParser
 import config_file_creation
+import data_transform
 
 def main_prog():
     config_file_name = config_file_creation.create_config_file()
@@ -23,7 +21,7 @@ def main_prog():
     data = pd.read_csv(file)
     data = data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
 
-    data_preprocess_obj = data_preprocess.DataPreprocess(data, int(config_param["time_in_middle"]))
+    data_preprocess_obj = data_preprocess.DataPreprocess(data, config_object)
     valid_col = data_preprocess_obj.col_details()
     data = data[valid_col]
 
@@ -33,11 +31,16 @@ def main_prog():
 
     final_data = data[start_index:end_index]
 
+    for c in final_data.columns:
+        fwd_shift_obj =  data_transform.DataTransform(final_data[c], config_object)
+        fwd_shift_data = fwd_shift_obj.shifting("fwd")
+        rev_shift_obj =  data_transform.DataTransform(final_data[c], config_object)
+        rev_shift_data = rev_shift_obj.shifting("bck")
 
 
 
-# Press the green button in the gutter to run the script.
+
+
+
 if __name__ == '__main__':
     main_prog()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
