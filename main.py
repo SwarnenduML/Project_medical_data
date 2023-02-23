@@ -6,6 +6,7 @@ from configparser import ConfigParser
 import config_file_creation
 import data_transform
 import train__test_data_creation
+import model_train
 
 def main_prog():
     config_file_name = config_file_creation.create_config_file()
@@ -42,8 +43,20 @@ def main_prog():
         train_ds_fwd, train_ds_rev = train_test_ds_creation_obj.train_ds()
         test_ds_fwd, test_ds_rev = train_test_ds_creation_obj.test_ds()
 
+        pred_fwd = []
+        pred_index_fwd = []
+        pred_rev = []
+        pred_index_rev = []
+        for i in range(len(test_ds_fwd)):
+            model = model_train.ModelTrain(train_ds_fwd[i], test_ds_fwd[i])
+            pred = model.train_pred_ds()
+            pred_fwd.append(pred)
+            pred_index_fwd.append(test_ds_fwd[i].index)
 
-
+            model = model_train.ModelTrain(train_ds_rev[i], test_ds_rev[i])
+            pred = model.train_pred_ds()
+            pred_rev.append(pred)
+            pred_index_rev.append(test_ds_rev[i].index)
 
 
 
