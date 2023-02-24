@@ -1,16 +1,12 @@
 import pandas as pd
-import os
-import time
 import warnings
-
 import data_statistics
-
 warnings.filterwarnings("ignore")
-
-import data_preprocess
 from configparser import ConfigParser
+
 import config_file_creation
 import new_data_generation
+import data_visual
 
 def main_prog():
     config_file_name = config_file_creation.create_config_file()
@@ -25,7 +21,13 @@ def main_prog():
         data_generator_obj.create_data()
     if data_stat =="True":
         data_stat_obj = data_statistics.DataStatistics(config_object)
-        data_stat_obj.get_statistics()
+        compiled_data = data_stat_obj.get_statistics()
+    if data_visualize =="True":
+        compiled_data = pd.read_csv(config_object["data"]["folder_to_write"]+"/total_summary_of_data.csv")
+        data_visual_obj = data_visual.DataVisual(compiled_data)
+        data_visual_obj.tot_nulls_per()
+
+
 
 
 

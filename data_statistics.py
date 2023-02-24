@@ -51,3 +51,4 @@ class DataStatistics(object):
 
         print("all done")
         each_file_summary_gen.to_csv(folder_to_write+"/"+"total_summary_of_data.csv")
+        return each_file_summary_gen
