@@ -11,11 +11,11 @@ def create_config_file():
         "threshold" : 0.2,
         "folder_to_read" : "C:/Users/sengupta/Downloads/erizt_data",
         "folder_to_write" : "C:/Users/sengupta/Downloads/erizt_data_generated",
-        "data_gen" : True,
+        "data_gen" : False,
         "data_stat" : True,
         "data_visualize" : True,
-
-        }
+        "data_for_visual" : "name_of_excel"
+    }
     config_file_name = 'config.ini'
     #Write the above sections to config.ini file
     with open(config_file_name, 'w') as conf:
