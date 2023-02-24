@@ -6,7 +6,7 @@ def create_config_file():
 
     config_object["data"] = {
         "time_in_middle": 20,
-        "time_trail_preceed": 1, #0.05
+        "time_trail_preceed": 1, #0.05 1 - fully take everything, closer to 0 is reject everything
         "shifting" : 4,
         "threshold" : 0.2,
         "folder_to_read" : "C:/Users/sengupta/Downloads/erizt_data",
