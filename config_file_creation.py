@@ -8,8 +8,14 @@ def create_config_file():
         "time_in_middle": 20,
         "time_trail_preceed": 1, #0.05
         "shifting" : 4,
-        "threshold" : 0.2
-    }
+        "threshold" : 0.2,
+        "folder_to_read" : "C:/Users/sengupta/Downloads/erizt_data",
+        "folder_to_write" : "C:/Users/sengupta/Downloads/erizt_data_generated",
+        "data_gen" : True,
+        "data_stat" : True,
+        "data_visualize" : True,
+
+        }
     config_file_name = 'config.ini'
     #Write the above sections to config.ini file
     with open(config_file_name, 'w') as conf:
