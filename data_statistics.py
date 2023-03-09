@@ -22,33 +22,50 @@ class DataStatistics(object):
         folder_to_write = config_param["folder_to_write"]
         files_to_read = list(os.listdir(folder_to_read))
         each_file_summary_gen = pd.DataFrame(
-            columns=['filename', 'valid_cols', 'start', 'end', 'nulls', 'non_nulls', 'percentage nulls', 'reason'])
+            columns=['filename', 'valid_cols', 'start','end','nulls_before',
+                                    'non_nulls_before','nulls_after','non_nulls_after','percentage nulls before',
+                                                'percentage nulls after','reason'])
         for i,file_to_read in enumerate(files_to_read):
             start_time = time.time()
-            print(file_to_read)
-            data = pd.read_csv(folder_to_read + "/" + file_to_read)
-            data = data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
-            data_preprocess_obj = data_preprocess.DataPreprocess(data, self.config_module)
-            valid_col = data_preprocess_obj.col_details()
-            start,end = data_preprocess_obj.start_end()
-            tmp_df_file = pd.DataFrame(columns=['filename', 'valid_cols', 'start','end','nulls', 'non_nulls', 'percentage nulls','reason'])
-            for c in valid_col:
-                null_before = data[c].isnull().sum()
-                values_present = data[c].count()
-                if data.shape[0] == start[valid_col.index(c)]:
+            #print(file_to_read)
+            input_data = pd.read_csv(folder_to_read + "/" + file_to_read)
+            output_data = pd.read_csv(folder_to_write + "/" + file_to_read[:-4]+"_generated.csv")
+            input_data = input_data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
+#            output_data = output_data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
+            data_preprocess_obj = data_preprocess.DataPreprocess(input_data, self.config_module)
+            start,end = data_preprocess_obj.start_end_valid_stat()
+            tmp_df_file = pd.DataFrame(columns=['filename', 'valid_cols', 'start','end','nulls_before',
+                                    'non_nulls_before','nulls_after','non_nulls_after','percentage nulls before',
+                                                'percentage nulls after','reason'])
+            for i,c in enumerate(input_data.columns):
+                null_before = input_data[c].isnull().sum()
+                values_before = input_data[c].count()
+                nulls_after, values_after = 0,0
+                if input_data.shape[0] == start[i] and -1 == end[i]:
+                    reason = "not a valid column. too many missing values"
+                    nulls_after, values_after = 0, -1
+                elif input_data.shape[0] == start[i]:
                     reason = "too many nulls at start"
-                elif -1 == end[valid_col.index(c)]:
+                elif -1 == end[i]:
                     reason = "too many nulls at end"
                 else:
                     reason = ""
-                tmp_df_each_col = pd.DataFrame([[file_to_read, c, start[valid_col.index(c)] , end[valid_col.index(c)],
-                                                 null_before, values_present, null_before / (null_before + values_present) * 100,reason]],
-                                               columns=['filename', 'valid_cols', 'start','end','nulls', 'non_nulls', 'percentage nulls','reason'])
+                    nulls_after = output_data[c].isnull().sum()
+                    values_after = output_data[c].count()
+                per_nulls_before = float("{:.2f}".format(null_before / (null_before + values_before) * 100))
+                per_nulls_after = float("{:.2f}".format(nulls_after / (nulls_after + values_after) * 100))
+                tmp_df_each_col = pd.DataFrame([[file_to_read, c, start[i], end[i], null_before, values_before,
+                                                 nulls_after, values_after ,per_nulls_before, per_nulls_after,reason]],
+                                               columns=['filename', 'valid_cols', 'start', 'end', 'nulls_before',
+                                                        'non_nulls_before', 'nulls_after', 'non_nulls_after',
+                                                        'percentage nulls before',
+                                                        'percentage nulls after', 'reason'])
                 tmp_df_file = tmp_df_file.append(tmp_df_each_col, ignore_index=True)
             each_file_summary_gen = each_file_summary_gen.append(tmp_df_file, ignore_index=True)
 
-            print(time.time() - start_time)
+            #print(time.time() - start_time)
 
         print("all done")
         each_file_summary_gen.to_csv(folder_to_write+"/"+"total_summary_of_data.csv")
+        each_file_summary_gen.to_excel(folder_to_write+"/"+"summary_of_data.xlsx")
         return each_file_summary_gen

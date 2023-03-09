@@ -23,9 +23,12 @@ def main_prog():
         data_stat_obj = data_statistics.DataStatistics(config_object)
         compiled_data = data_stat_obj.get_statistics()
     if data_visualize =="True":
-        compiled_data = pd.read_csv(config_object["data"]["folder_to_write"]+"/total_summary_of_data.csv")
+        if data_stat !="True":
+            compiled_data = pd.read_csv(config_object["data"]["folder_to_write"]+"/total_summary_of_data.csv")
         data_visual_obj = data_visual.DataVisual(compiled_data)
-        data_visual_obj.tot_nulls_per()
+        data_visual_obj.tot_nulls_per() # Percentage of nulls per column per file
+        data_visual_obj.null_per_file() # Percentage of nulls per file
+
 
 
 

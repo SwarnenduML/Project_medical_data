@@ -76,5 +76,35 @@ class DataPreprocess(object):
                 end_index.append(data.shape[0])
         return start_index, end_index
 
+    def start_end_valid_stat(self):
+        '''
+        This function would determine the starting points and the ending points in the valid columns
+        :return: The start and end points of the data
+        '''
+        valid_col = self.col_details()
+        start_index = []
+        end_index = []
+        data = self.data
+        for c in data.columns:
+            if c not in valid_col:
+                start_index.append(data.shape[0])
+                end_index.append(-1)
+            else:
+                elem, dups = self.count_dups(data[c])
+                if math.isnan(elem[0]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+                    start_index.append(dups[0])
+                elif math.isnan(elem[0]):
+                    print("Too much NULLs in the front for column "+ c)
+                    start_index.append(data.shape[0])
+                else:
+                    start_index.append(0)
+                if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+                    end_index.append(dups[-1])
+                elif math.isnan(elem[-1]):
+                    print("Too much NULLs at the back for column " + c)
+                    end_index.append(-1)
+                else:
+                    end_index.append(data.shape[0])
+        return start_index, end_index
 
 
