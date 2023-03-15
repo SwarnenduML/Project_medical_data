@@ -68,12 +68,12 @@ class DataPreprocess(object):
             else:
                 start_index.append(0)
             if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.time_trail_preceed:
-                end_index.append(dups[-1])
+                end_index.append(data.shape[0]-dups[-1]+1)
             elif math.isnan(elem[-1]):
                 print("Too much NULLs at the back for column " + c)
                 end_index.append(-1)
             else:
-                end_index.append(data.shape[0])
+                end_index.append(data.shape[0]+1)
         return start_index, end_index
 
     def start_end_valid_stat(self):

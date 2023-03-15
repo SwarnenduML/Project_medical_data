@@ -31,7 +31,7 @@ class NewDataGeneration(object):
         files_to_read = list(os.listdir(folder_to_read))
         for file_to_read in files_to_read:
             print(file_to_read)
-            file_to_read = "003-210505-103346.csv"
+#            file_to_read = '003-210510-144013.csv'
             start_time = time.time()
             file = folder_to_read + "/" + file_to_read
             data = pd.read_csv(file)
@@ -42,43 +42,52 @@ class NewDataGeneration(object):
             data = data[valid_col]
 
             start, end = data_preprocess_obj.start_end()
-            start_index = max(start, default=0)
-            end_index = min(end, default=-1)
+            start_index = min(start, default=0)
+            end_index = max(end, default=-1)
 
             final_data = data[start_index:end_index]
 
-            for c in final_data.columns:
+            for i,c in enumerate(final_data.columns):
+                counter = 0
+#                final_data = data[c][start[i]:end[i]]
                 #            print(c)
                 while final_data[c].isna().any():
-                    #               print(final_data[c].isna().sum())
-                    fwd_shift_obj = data_transform.DataTransform(final_data[c], self.config_module)
-                    fwd_shift_data = fwd_shift_obj.shifting("fwd")
-                    rev_shift_obj = data_transform.DataTransform(final_data[c], self.config_module)
-                    rev_shift_data = rev_shift_obj.shifting("bck")
+                    if counter > int(self.config_module['data']['time_in_middle']):
+                        break
+                    else:
+                        counter = counter+1
+                        #               print(final_data[c].isna().sum())
+                        fwd_shift_obj = data_transform.DataTransform(final_data[c], self.config_module)
+                        fwd_shift_data = fwd_shift_obj.shifting("fwd")
+                        rev_shift_obj = data_transform.DataTransform(final_data[c], self.config_module)
+                        rev_shift_data = rev_shift_obj.shifting("bck")
 
-                    train_test_ds_creation_obj = train__test_data_creation.TrainTestDSCreation(fwd_shift_data,
-                                                                                               rev_shift_data,
-                                                                                               self.config_module)
-                    train_ds_fwd, train_ds_rev = train_test_ds_creation_obj.train_ds()
-                    test_ds_fwd, test_ds_rev = train_test_ds_creation_obj.test_ds()
+                        train_test_ds_creation_obj = train__test_data_creation.TrainTestDSCreation(fwd_shift_data,
+                                                                                                   rev_shift_data,
+                                                                                                   self.config_module)
+                        train_ds_fwd, train_ds_rev = train_test_ds_creation_obj.train_ds()
+                        test_ds_fwd, test_ds_rev, pred_index_ds_fwd, pred_index_ds_rev = train_test_ds_creation_obj.test_ds()
 
-                    pred_fwd = []
-                    pred_index_fwd = []
-                    pred_rev = []
-                    pred_index_rev = []
-                    for i in range(len(test_ds_fwd)):
-                        model = model_train.ModelTrain(train_ds_fwd[i], test_ds_fwd[i])
-                        pred = model.train_pred_ds()
-                        pred_fwd.append(pred)
-                        pred_index_fwd.append(test_ds_fwd[i].index)
+                        pred_fwd = []
+                        pred_index_fwd = []
+                        pred_rev = []
+                        pred_index_rev = []
+                        for i in range(len(test_ds_fwd)):
+                            model = model_train.ModelTrain(train_ds_fwd[i], test_ds_fwd[i])
+                            pred = model.train_pred_ds()
+                            pred_fwd.append(pred)
+                            pred_index_fwd.append(pred_index_ds_fwd[i])
 
-                        model = model_train.ModelTrain(train_ds_rev[i], test_ds_rev[i])
-                        pred = model.train_pred_ds()
-                        pred_rev.append(pred)
-                        pred_index_rev.append(test_ds_rev[i].index)
+                        for i in range(len(test_ds_rev)):
+                            model = model_train.ModelTrain(train_ds_rev[i], test_ds_rev[i])
+                            pred = model.train_pred_ds()
+                            pred_rev.append(pred)
+                            pred_index_rev.append(pred_index_ds_rev[i])
 
-                    data_colab_obj = data_colab.DataColab(final_data[c], pred_fwd, pred_index_fwd, pred_rev,
-                                                          pred_index_rev, self.config_module)
-                    final_data[c] = data_colab_obj.colab()
+                        data_colab_obj = data_colab.DataColab(final_data[c], pred_fwd, pred_index_fwd, pred_rev,
+                                                              pred_index_rev, self.config_module)
+                        final_data[c] = data_colab_obj.colab()
             print(time.time() - start_time)
             final_data.to_csv(folder_to_write + "/" + file_to_read[:-4] + "_generated.csv")
+            final_data.to_excel("C:/Users/sengupta/Downloads/erizt_data_generated_excel/"+file_to_read[:-4]+"_gen.xlsx")
+            pd.read_csv(folder_to_read+"/"+file_to_read).to_excel("C:/Users/sengupta/Downloads/erizt_data_excel/"+file_to_read[:-3]+"xlsx")

@@ -21,25 +21,28 @@ class DataColab(object):
         '''
         start_index = self.data_act.index[0]
         end_index = self.data_act.index[-1]
+        max_data = self.data_act.max()*(1+self.threshold)
+        min_data = self.data_act.max()*(1-self.threshold)
+        median_data = self.data_act.median()
         for val_i, i in enumerate(self.fwd_index):
             for val_j, j in enumerate(i):
-                if j < end_index-val_i and j > start_index-val_i:
-                    if (math.isnan(self.data_act.iloc[j-1-(start_index-val_i)])) & (self.fwd_data[val_i][val_j] > (1-self.threshold)*self.data_act.min()) \
-                        & (self.fwd_data[val_i][val_j] < (1+self.threshold)* self.data_act.max()):
-                        self.data_act[j] = self.fwd_data[val_i][val_j]
-                    elif math.isnan(self.data_act.iloc[j-1-(start_index+val_i)]):
-                        self.data_act.iloc[j-1-(start_index+val_i)] = self.data_act.median()
+                if j <= end_index and j >= start_index:
+                    if math.isnan(self.data_act[j]):
+                        if self.fwd_data[val_i][val_j] > min_data and self.fwd_data[val_i][val_j] < max_data:
+                            self.data_act[j] = self.fwd_data[val_i][val_j]
+                        else:
+                            self.data_act[j] = median_data
                     else:
-                        self.data_act.iloc[j - 1 - (start_index + val_i)] = (self.data_act.iloc[j - 1 - (start_index + val_i)]+self.fwd_data[val_i][val_j])/2
-
+                        self.data_act[j] = (self.fwd_data[val_i][val_j] + self.data_act[j])/2
 
         for val_i, i in enumerate(self.rev_index):
             for val_j, j in enumerate(i):
-                if j < end_index+val_i and j > start_index+val_i:
-                    if (math.isnan(self.data_act.iloc[j-1-(start_index+val_i)]) & (self.rev_data[val_i][val_j] > (1-self.threshold)*self.data_act.min()) & (self.rev_data[val_i][val_j] < (1+self.threshold)* self.data_act.max())):
-                        self.data_act.iloc[j-1-(start_index+val_i)] = self.rev_data[val_i][val_j]
-                    elif math.isnan(self.data_act.iloc[j-1-(start_index+val_i)]):
-                        self.data_act.iloc[j-1-(start_index+val_i)] = self.data_act.median()
+                if j <= end_index and j >= start_index:
+                    if math.isnan(self.data_act[j]):
+                        if self.rev_data[val_i][val_j] > min_data and self.rev_data[val_i][val_j] < max_data:
+                            self.data_act[j] = self.rev_data[val_i][val_j]
+                        else:
+                            self.data_act[j] = median_data
                     else:
-                        self.data_act.iloc[j - 1 - (start_index + val_i)] = (self.data_act.iloc[j - 1 - (start_index + val_i)]+self.rev_data[val_i][val_j])/2
+                        self.data_act[j] = (self.rev_data[val_i][val_j] + self.data_act[j])/2
         return self.data_act

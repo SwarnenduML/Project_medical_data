@@ -14,7 +14,7 @@ def create_config_file():
         "data_gen" : False,
         "data_stat" : False,
         "data_visualize" : True,
-        "data_for_visual" : "name_of_excel"
+        "data_for_visual" : "003-210525-185548.csv"
     }
     config_file_name = 'config.ini'
     #Write the above sections to config.ini file

@@ -32,16 +32,21 @@ class TrainTestDSCreation(object):
         :return:
         '''
         test_ds_fwd = []
+        fwd_pred_index = []
         test_ds_rev = []
+        prev_pred_index = []
         for i in range(1,self.num_shift+1):
             test_d_fwd = self.fwd_dataset[self.fwd_dataset[self.fwd_dataset.columns[:i]].notnull().all(axis=1) &
                                           self.fwd_dataset[self.fwd_dataset.columns[i]].isna()][self.fwd_dataset.columns[:i]]
             test_ds_fwd.append(test_d_fwd)
+            fwd_pred_index.append(test_d_fwd.index + i)
+
 
         for i in range(1,self.num_shift+1):
             test_d_rev = self.rev_dataset[self.rev_dataset[self.rev_dataset.columns[:i]].notnull().all(axis=1) &
                                           self.rev_dataset[self.rev_dataset.columns[i]].isna()][self.rev_dataset.columns[:i]]
             test_ds_rev.append(test_d_rev)
+            prev_pred_index.append(test_d_rev.index - i)
 
-        return test_ds_fwd, test_ds_rev
+        return test_ds_fwd, test_ds_rev, fwd_pred_index, prev_pred_index
 
