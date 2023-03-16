@@ -52,11 +52,11 @@ class DataStatistics(object):
                     reason = ""
                     nulls_after = output_data[c].isnull().sum()
                     values_after = output_data[c].count()
-                per_nulls_before = float("{:.2f}".format(values_before / input_data.shape[0] * 100))
-                per_nulls_after = float("{:.2f}".format(values_after / input_data.shape[0] * 100))
-                diff_non_nulls, diff_non_null_per = null_before-nulls_after, per_nulls_before-per_nulls_after
+                per_nonnulls_before = float("{:.2f}".format(values_before / input_data.shape[0] * 100))
+                per_nonnulls_after = float("{:.2f}".format(values_after / input_data.shape[0] * 100))
+                diff_non_nulls, diff_non_null_per = values_after-values_before, per_nonnulls_after-per_nonnulls_before
                 tmp_df_each_col = pd.DataFrame([[file_to_read, c, start[i], end[i], null_before, values_before,
-                                                 nulls_after, values_after ,per_nulls_before, per_nulls_after,
+                                                 nulls_after, values_after ,per_nonnulls_before, per_nonnulls_after,
                                                  diff_non_nulls, diff_non_null_per,reason]],
                                                columns=['filename', 'valid_cols', 'start', 'end', 'nulls_before',
                                                         'non_nulls_before', 'nulls_after', 'non_nulls_after',

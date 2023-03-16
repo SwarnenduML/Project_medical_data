@@ -74,6 +74,7 @@ class DataVisual(object):
         for c in output_data.columns[1:]:
             sns.set_theme()
             line_plot = sns.lineplot(data = merged_df[[c+'_i',c]])
+            line_plot.set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
             fig = line_plot.get_figure()
             fig.set_size_inches((12.8, 7.2))
             fig.savefig('comparision_on_'+c+'.png')
@@ -130,8 +131,68 @@ class DataVisual(object):
         compiled_data = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
         comp_data = compiled_data.groupby('filename').count()['valid_cols']
         file_max_val_col = compiled_data[compiled_data['filename'].isin(list(comp_data[comp_data == comp_data.max()].index))]
-        print("Here")
+        file_max_per = list(file_max_val_col[file_max_val_col['diff non null percentage']==file_max_val_col['diff non null percentage'].max()]['filename'])[0]
+        file_max_no = list(file_max_val_col[file_max_val_col['diff non nulls'] == file_max_val_col['diff non nulls'].max()]['filename'])[0]
+        print('Best in number: '+ file_max_no)
+        print('Best in percentage: '+ file_max_per)
+        self.create_comp_file(file_max_no)
+        self.create_comp_file(file_max_per)
 
+    def create_comp_file(self, file):
+        '''
+
+        :return:
+        '''
+        input_dir = self.config_obj["data"]["folder_to_read"] + '/'
+        output_dir = self.config_obj["data"]["folder_to_write"] + '/'
+        input_path_for_visual = file
+        output_path_for_visual = input_path_for_visual[:-4] + "_generated.csv"
+        input_data = pd.read_csv(input_dir + input_path_for_visual)
+        output_data = pd.read_csv(output_dir + output_path_for_visual)
+        output_data = output_data.rename({'Unnamed: 0': 'index'}, axis=1)
+        input_data["index"] = input_data.index
+        input_data = input_data[output_data.columns]
+        input_data = input_data.add_suffix("_i")
+        input_data = input_data.rename({'index_i': 'index'}, axis=1)
+        merged_df = input_data.merge(output_data, how="left", on='index')
+        for c in output_data.columns[1:]:
+            sns.set_theme()
+            line_plot = sns.lineplot(data=merged_df[[c + '_i', c]])
+            line_plot.set(title = file, xlabel =  'index', ylabel = 'value')
+            fig = line_plot.get_figure()
+            fig.set_size_inches((12.8, 7.2))
+            fig.savefig('comp_' + c + '_'+file+'.png')
+            fig.clf()
+        print("done")
+
+    def create_comp_file_col(self, file, col):
+        '''
+
+        :return:
+        '''
+        input_dir = self.config_obj["data"]["folder_to_read"] + '/'
+        output_dir = self.config_obj["data"]["folder_to_write"] + '/'
+        input_path_for_visual = file
+        output_path_for_visual = input_path_for_visual[:-4] + "_generated.csv"
+        input_data = pd.read_csv(input_dir + input_path_for_visual)
+        output_data = pd.read_csv(output_dir + output_path_for_visual)
+        output_data = output_data.rename({'Unnamed: 0': 'index'}, axis=1)
+        input_data["index"] = input_data.index
+        input_data = input_data[output_data.columns]
+        input_data = input_data.add_suffix("_i")
+        input_data = input_data.rename({'index_i': 'index'}, axis=1)
+        merged_df = input_data.merge(output_data, how="left", on='index')
+        sns.set_theme()
+        if col in output_data.columns:
+            line_plot = sns.lineplot(data=merged_df[[col + '_i', col]])
+            line_plot.set(title = file, xlabel =  'index', ylabel = 'value')
+            fig = line_plot.get_figure()
+            fig.set_size_inches((12.8, 7.2))
+            fig.savefig('max_diff_comp_' + col + '_'+file+'.png')
+            fig.clf()
+        else:
+            print(col+ ' not found')
+        print("done")
 
 
 

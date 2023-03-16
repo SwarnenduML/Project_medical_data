@@ -34,6 +34,16 @@ def main_prog():
         data_visual_obj.number_of_col_used()
         data_visual_obj.column_type()
         data_visual_obj.visual_best_diff()
+        col = list(compiled_data.groupby('valid_cols').first().index)
+        for c in col:
+            comp_d = compiled_data[compiled_data['reason']!='not a valid column. too many missing values']
+            comp_d = comp_d[comp_d['valid_cols']==c]
+            file_no = list(comp_d[comp_d['diff non nulls']==comp_d['diff non nulls'].max()]['filename'])[0]
+            file_per = list(comp_d[comp_d['diff non null percentage'] == comp_d['diff non null percentage'].max()]['filename'])[0]
+            print('Best in number for columns '+c+' : ' + file_no)
+            print('Best in percentage for columns '+c+' : ' + file_per)
+            data_visual_obj.create_comp_file_col(file_no,c)
+            data_visual_obj.create_comp_file_col(file_per,c)
 
 
 
