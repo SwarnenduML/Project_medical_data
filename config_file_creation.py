@@ -12,7 +12,7 @@ def create_config_file():
         "folder_to_read" : "C:/Users/sengupta/Downloads/erizt_data",
         "folder_to_write" : "C:/Users/sengupta/Downloads/erizt_data_generated",
         "data_gen" : False,
-        "data_stat" : False,
+        "data_stat" : True,
         "data_visualize" : True,
         "data_for_visual" : "003-210525-185548.csv"
     }

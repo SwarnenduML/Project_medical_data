@@ -33,6 +33,7 @@ def main_prog():
         data_visual_obj.create_comp() # Compare the input and output file
         data_visual_obj.number_of_col_used()
         data_visual_obj.column_type()
+        data_visual_obj.visual_best_diff()
 
 
 

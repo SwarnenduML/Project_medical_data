@@ -36,7 +36,7 @@ class DataStatistics(object):
             start,end = data_preprocess_obj.start_end_valid_stat()
             tmp_df_file = pd.DataFrame(columns=['filename', 'valid_cols', 'start','end','nulls_before',
                                     'non_nulls_before','nulls_after','non_nulls_after','percentage non-nulls before',
-                                                        'percentage non-nulls after','reason'])
+                                                        'percentage non-nulls after','diff non nulls','diff non null percentage','reason'])
             for i , c in enumerate(input_data.columns):
                 null_before = input_data[c].isnull().sum()
                 values_before = input_data[c].count()
@@ -54,12 +54,14 @@ class DataStatistics(object):
                     values_after = output_data[c].count()
                 per_nulls_before = float("{:.2f}".format(values_before / input_data.shape[0] * 100))
                 per_nulls_after = float("{:.2f}".format(values_after / input_data.shape[0] * 100))
+                diff_non_nulls, diff_non_null_per = null_before-nulls_after, per_nulls_before-per_nulls_after
                 tmp_df_each_col = pd.DataFrame([[file_to_read, c, start[i], end[i], null_before, values_before,
-                                                 nulls_after, values_after ,per_nulls_before, per_nulls_after,reason]],
+                                                 nulls_after, values_after ,per_nulls_before, per_nulls_after,
+                                                 diff_non_nulls, diff_non_null_per,reason]],
                                                columns=['filename', 'valid_cols', 'start', 'end', 'nulls_before',
                                                         'non_nulls_before', 'nulls_after', 'non_nulls_after',
                                                         'percentage non-nulls before',
-                                                        'percentage non-nulls after', 'reason'])
+                                                        'percentage non-nulls after','diff non nulls','diff non null percentage', 'reason'])
                 tmp_df_file = tmp_df_file.append(tmp_df_each_col, ignore_index=True)
             each_file_summary_gen = each_file_summary_gen.append(tmp_df_file, ignore_index=True)
 

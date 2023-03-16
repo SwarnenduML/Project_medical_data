@@ -32,7 +32,7 @@ class DataVisual(object):
         '''
         sns.set_theme()
         data_plot = self.compiled_data[self.compiled_data['reason']!='not a valid column. too many missing values']
-        hist_plot = sns.lineplot(data= np.log(data_plot[['percentage non-nulls before', 'percentage non-nulls after']])).set_title("Percentage of non-nulls per column per file")
+        hist_plot = sns.histplot(data= np.log(data_plot[['percentage non-nulls before', 'percentage non-nulls after']])).set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
         fig.savefig("log_tot_non_nulls.png")
@@ -113,15 +113,24 @@ class DataVisual(object):
         comp_data = compiled_data.groupby('valid_cols').count()
         comp_data['valid_cols'] = comp_data.index
         sns.set_theme()
-        hist_plot = sns.histplot(comp_data[['valid_cols','filename']],bins=6)
-        hist_plot.set_xlabel('Attribute')
-        hist_plot.set_ylabel('Number of files')
-        hist_plot.set(title = 'Count of files with type columns')
-        fig = hist_plot.get_figure()
+        bar_plot = sns.barplot(data = comp_data, y = 'filename',x = 'valid_cols')
+        bar_plot.set_xlabel('Attribute')
+        bar_plot.set_ylabel('Number of files')
+        bar_plot.set(title = 'Count of files with type columns')
+        fig = bar_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
         fig.savefig('type_col_file.png')
         fig.clf()
 
+    def visual_best_diff(self):
+        '''
+
+        :return:
+        '''
+        compiled_data = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
+        comp_data = compiled_data.groupby('filename').count()['valid_cols']
+        file_max_val_col = compiled_data[compiled_data['filename'].isin(list(comp_data[comp_data == comp_data.max()].index))]
+        print("Here")
 
 
 
