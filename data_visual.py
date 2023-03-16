@@ -1,8 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import numpy as np
-from data_preprocess import DataPreprocess
-import matplotlib.pyplot as plt
+import os
 
 class DataVisual(object):
     '''
@@ -11,6 +10,9 @@ class DataVisual(object):
     def __init__(self, data, config_obj):
         self.compiled_data = data
         self.config_obj = config_obj
+        self.folder_to_plot = self.config_obj['data']['folder_to_plot']+'/'
+        if not os.path.exists(self.config_obj['data']['folder_to_plot']):
+            os.mkdir(self.config_obj['data']['folder_to_plot'])
 
     def tot_nulls_per(self):
         '''
@@ -22,7 +24,7 @@ class DataVisual(object):
         hist_plot = sns.histplot(data =data_plot[['percentage non-nulls before', 'percentage non-nulls after']], binwidth = 2,element="step").set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
-        fig.savefig("tot_non_nulls.png")
+        fig.savefig(self.folder_to_plot+"tot_non_nulls.png")
         fig.clf()
 
     def log_tot_nulls_per(self):
@@ -35,7 +37,7 @@ class DataVisual(object):
         hist_plot = sns.histplot(data= np.log(data_plot[['percentage non-nulls before', 'percentage non-nulls after']])).set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
-        fig.savefig("log_tot_non_nulls.png")
+        fig.savefig(self.folder_to_plot+"log_tot_non_nulls.png")
         fig.clf()
 
 
@@ -51,7 +53,7 @@ class DataVisual(object):
                                  binwidth=2).set_title("Percentage of non-nulls per file")
         fig = hist_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
-        fig.savefig("per_non_nulls_file.png")
+        fig.savefig(self.folder_to_plot+"per_non_nulls_file.png")
         fig.clf()
 
     def create_comp(self):
@@ -77,7 +79,7 @@ class DataVisual(object):
             line_plot.set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
             fig = line_plot.get_figure()
             fig.set_size_inches((12.8, 7.2))
-            fig.savefig('comparision_on_'+c+'.png')
+            fig.savefig(self.folder_to_plot+'comparision_on_'+c+'.png')
             fig.clf()
         print("done")
         #fig.clf()
@@ -101,7 +103,7 @@ class DataVisual(object):
         hist_plot.set(title = 'Count of files with valid columns')
         fig = hist_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
-        fig.savefig('no_file_valid_col.png')
+        fig.savefig(self.folder_to_plot+'no_file_valid_col.png')
         fig.clf()
 
     def column_type(self):
@@ -120,7 +122,7 @@ class DataVisual(object):
         bar_plot.set(title = 'Count of files with type columns')
         fig = bar_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
-        fig.savefig('type_col_file.png')
+        fig.savefig(self.folder_to_plot+'type_col_file.png')
         fig.clf()
 
     def visual_best_diff(self):
@@ -161,7 +163,7 @@ class DataVisual(object):
             line_plot.set(title = file, xlabel =  'index', ylabel = 'value')
             fig = line_plot.get_figure()
             fig.set_size_inches((12.8, 7.2))
-            fig.savefig('comp_' + c + '_'+file+'.png')
+            fig.savefig(self.folder_to_plot+'comp_' + c + '_'+file[:-4]+'.png')
             fig.clf()
         print("done")
 
@@ -188,7 +190,7 @@ class DataVisual(object):
             line_plot.set(title = file, xlabel =  'index', ylabel = 'value')
             fig = line_plot.get_figure()
             fig.set_size_inches((12.8, 7.2))
-            fig.savefig('max_diff_comp_' + col + '_'+file+'.png')
+            fig.savefig(self.folder_to_plot+'max_diff_comp_' + col + '_'+file[:-4]+'.png')
             fig.clf()
         else:
             print(col+ ' not found')

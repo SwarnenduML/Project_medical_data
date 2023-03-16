@@ -11,6 +11,7 @@ def create_config_file():
         "threshold" : 0.2,
         "folder_to_read" : "C:/Users/sengupta/Downloads/erizt_data",
         "folder_to_write" : "C:/Users/sengupta/Downloads/erizt_data_generated",
+        "folder_to_plot" : "C:/Users/sengupta/Downloads/plots",
         "data_gen" : False,
         "data_stat" : False,
         "data_visualize" : True,
