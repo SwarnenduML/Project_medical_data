@@ -13,6 +13,7 @@ class DataVisual(object):
         self.folder_to_plot = self.config_obj['data']['folder_to_plot']+'/'
         if not os.path.exists(self.config_obj['data']['folder_to_plot']):
             os.mkdir(self.config_obj['data']['folder_to_plot'])
+            print("Directory not there. Hence creating")
 
     def tot_nulls_per(self):
         '''
