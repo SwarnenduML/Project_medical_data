@@ -5,9 +5,10 @@ def create_config_file():
     config_object = ConfigParser()
 
     config_object["data"] = {
-        "time_in_middle": 20,
-        "time_trail_preceed": 1, #0.05 1 - fully take everything, closer to 0 is reject everything
-        "shifting" : 4,
+        "time_in_middle": 20, # explainability is issue
+        "time_trail_preceed": 1, #0.05 1 - fully take everything, closer to 0 is reject everything - hw much data is allowed to be worked with
+        # cobimaed percentage should be reflected here - Need
+        "shifting" : 4, # change the name to regression window
         "threshold" : 0.2,
         "folder_to_read" : "C:/Users/sengupta/Downloads/erizt_data",
         "folder_to_write" : "C:/Users/sengupta/Downloads/erizt_data_generated",
