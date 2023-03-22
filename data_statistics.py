@@ -17,7 +17,7 @@ class DataStatistics(object):
 
         :return:
         '''
-        config_param = self.config_module["data"]
+        config_param = self.config_module
         folder_to_read = config_param["folder_to_read"]
         folder_to_write = config_param["folder_to_write"]
         files_to_read = list(os.listdir(folder_to_read))

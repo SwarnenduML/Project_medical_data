@@ -7,7 +7,7 @@ class TrainTestDSCreation(object):
     def __init__(self, fwd_dataset, rev_dataset, config_file):
         self.fwd_dataset = fwd_dataset
         self.rev_dataset = rev_dataset
-        self.num_shift = int(config_file["data"]["shifting"])
+        self.num_shift = int(config_file["shifting"])
 
     def train_ds(self):
         '''

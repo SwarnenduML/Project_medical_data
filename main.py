@@ -2,29 +2,29 @@ import pandas as pd
 import warnings
 import data_statistics
 warnings.filterwarnings("ignore")
+import yaml
 #from configparser import ConfigParser
 
-import config_file_creation
 import new_data_generation
 import data_visual
 
 def main_prog():
     # config_file_name = config_file_creation.create_config_file()
     # Read config.ini file
-    config_object = #ConfigParser()
-    config_object.read(config_file_name)
-    data_gen = config_object["data"]["data_gen"]
-    data_stat = config_object["data"]["data_stat"]
-    data_visualize = config_object["data"]["data_visualize"]
-    if data_gen=="True":
+    with open("req_yaml.yml", 'r') as stream:
+        config_object = yaml.safe_load(stream)
+    data_gen = config_object["data_gen"]
+    data_stat = config_object["data_stat"]
+    data_visualize = config_object["data_visualize"]
+    if data_gen:
         data_generator_obj = new_data_generation.NewDataGeneration(config_object)
         data_generator_obj.create_data()
-    if data_stat =="True":
+    if data_stat:
         data_stat_obj = data_statistics.DataStatistics(config_object)
         compiled_data = data_stat_obj.get_statistics()
-    if data_visualize =="True":
-        if data_stat !="True":
-            compiled_data = pd.read_csv(config_object["data"]["folder_to_write"] + "/total_summary_of_data.csv",
+    if data_visualize:
+        if not data_stat:
+            compiled_data = pd.read_csv(config_object["folder_to_write"] + "/total_summary_of_data.csv",
                                         index_col=0)
         data_visual_obj = data_visual.DataVisual(compiled_data, config_object)
         data_visual_obj.tot_nulls_per() # Percentage of non-nulls per column per file

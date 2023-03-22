@@ -12,7 +12,7 @@ class DataColab(object):
         self.fwd_index = fwd_index
         self.rev_data = rev_data
         self.rev_index = rev_index
-        self.threshold = float(config_file["data"]["threshold"])
+        self.threshold = float(config_file["threshold"])
 
     def colab(self):
         '''

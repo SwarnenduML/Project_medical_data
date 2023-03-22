@@ -62,9 +62,9 @@ class DataVisual(object):
 
         :return:
         '''
-        input_dir = self.config_obj["data"]["folder_to_read"]+'/'
-        output_dir = self.config_obj["data"]["folder_to_write"]+'/'
-        input_path_for_visual = self.config_obj["data"]['data_for_visual']
+        input_dir = self.config_obj["folder_to_read"]+'/'
+        output_dir = self.config_obj["folder_to_write"]+'/'
+        input_path_for_visual = self.config_obj['data_for_visual']
         output_path_for_visual = input_path_for_visual[:-4]+"_generated.csv"
         input_data = pd.read_csv(input_dir+input_path_for_visual)
         output_data = pd.read_csv(output_dir+output_path_for_visual)
@@ -146,8 +146,8 @@ class DataVisual(object):
 
         :return:
         '''
-        input_dir = self.config_obj["data"]["folder_to_read"] + '/'
-        output_dir = self.config_obj["data"]["folder_to_write"] + '/'
+        input_dir = self.config_obj["folder_to_read"] + '/'
+        output_dir = self.config_obj["folder_to_write"] + '/'
         input_path_for_visual = file
         output_path_for_visual = input_path_for_visual[:-4] + "_generated.csv"
         input_data = pd.read_csv(input_dir + input_path_for_visual)
@@ -173,8 +173,8 @@ class DataVisual(object):
 
         :return:
         '''
-        input_dir = self.config_obj["data"]["folder_to_read"] + '/'
-        output_dir = self.config_obj["data"]["folder_to_write"] + '/'
+        input_dir = self.config_obj["folder_to_read"] + '/'
+        output_dir = self.config_obj["folder_to_write"] + '/'
         input_path_for_visual = file
         output_path_for_visual = input_path_for_visual[:-4] + "_generated.csv"
         input_data = pd.read_csv(input_dir + input_path_for_visual)

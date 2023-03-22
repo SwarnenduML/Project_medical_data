@@ -10,7 +10,7 @@ class DataTransform(object):
     def __init__(self, data, config_file):
         self.data = data
         self.config_file = config_file
-        self.num_shift = int(self.config_file["data"]["shifting"])
+        self.num_shift = int(self.config_file["shifting"])
 
     def shifting(self, type):
         '''

@@ -8,8 +8,8 @@ class DataPreprocess(object):
     '''
     def __init__(self, data, config_object):
         self.data = data
-        self.time_in_middle = int(config_object["data"]["time_in_middle"])
-        self.time_trail_preceed = float(config_object["data"]["time_trail_preceed"])
+        self.time_in_middle = int(config_object["time_in_middle"])
+        self.time_trail_preceed = float(config_object["time_trail_preceed"])
 
     def count_dups(self,nums):
         element = []

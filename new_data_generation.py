@@ -8,7 +8,7 @@ import data_preprocess
 from configparser import ConfigParser
 import config_file_creation
 import data_transform
-import train__test_data_creation
+import train_test_data_creation
 import model_train
 import data_colab
 
@@ -25,7 +25,7 @@ class NewDataGeneration(object):
 
         :return:
         '''
-        config_param = self.config_module["data"]
+        config_param = self.config_module
         folder_to_read = config_param["folder_to_read"]
         folder_to_write = config_param["folder_to_write"]
         files_to_read = list(os.listdir(folder_to_read))
@@ -62,7 +62,7 @@ class NewDataGeneration(object):
                         rev_shift_obj = data_transform.DataTransform(final_data[c], self.config_module)
                         rev_shift_data = rev_shift_obj.shifting("bck")
 
-                        train_test_ds_creation_obj = train__test_data_creation.TrainTestDSCreation(fwd_shift_data,
+                        train_test_ds_creation_obj = train_test_data_creation.TrainTestDSCreation(fwd_shift_data,
                                                                                                    rev_shift_data,
                                                                                                    self.config_module)
                         train_ds_fwd, train_ds_rev = train_test_ds_creation_obj.train_ds()
