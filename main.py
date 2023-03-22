@@ -2,16 +2,16 @@ import pandas as pd
 import warnings
 import data_statistics
 warnings.filterwarnings("ignore")
-from configparser import ConfigParser
+#from configparser import ConfigParser
 
 import config_file_creation
 import new_data_generation
 import data_visual
 
 def main_prog():
-    config_file_name = config_file_creation.create_config_file()
+    # config_file_name = config_file_creation.create_config_file()
     # Read config.ini file
-    config_object = ConfigParser()
+    config_object = #ConfigParser()
     config_object.read(config_file_name)
     data_gen = config_object["data"]["data_gen"]
     data_stat = config_object["data"]["data_stat"]
