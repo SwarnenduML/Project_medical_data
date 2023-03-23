@@ -27,7 +27,7 @@ def main_prog():
             compiled_data = pd.read_csv(config_object["folder_to_write"] + "/total_summary_of_data.csv",
                                         index_col=0)
         data_visual_obj = data_visual.DataVisual(compiled_data, config_object)
-        data_visual_obj.tot_nulls_per() # Percentage of non-nulls per column per file
+#        data_visual_obj.tot_nulls_per() # Percentage of non-nulls per column per file
         data_visual_obj.log_tot_nulls_per()
         data_visual_obj.non_null_per_file() # Percentage of nulls per file
         data_visual_obj.create_comp() # Compare the input and output file

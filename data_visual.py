@@ -10,10 +10,10 @@ class DataVisual(object):
     def __init__(self, data, config_obj):
         self.compiled_data = data
         self.config_obj = config_obj
-        self.folder_to_plot = self.config_obj['data']['folder_to_plot']+'/'
+        self.folder_to_plot = self.config_obj['folder_to_plot']+'/'
         self.no_of_files_read = len(list(os.listdir(self.config_obj['folder_to_read'])))
-        if not os.path.exists(self.config_obj['data']['folder_to_plot']):
-            os.mkdir(self.config_obj['data']['folder_to_plot'])
+        if not os.path.exists(self.config_obj['folder_to_plot']):
+            os.mkdir(self.config_obj['folder_to_plot'])
             print("Directory not there. Hence creating")
 
     def tot_nulls_per(self):
@@ -94,22 +94,19 @@ class DataVisual(object):
         :return:
         '''
         compiled_data = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
-        comp_data = compiled_data.groupby('filename').count()['valid_cols']
-        comp_data.index = range(len(comp_data))
-        filenames = list(compiled_data.groupby('filename').count().index)
-        no_missing_files = len(list(set(list(self.compiled_data['filename'])) ^ set(filenames)))
-        comp_data = comp_data.append(pd.Series([0]*no_missing_files))
-        comp_data = comp_data.reset_index(drop=True)
+        comp_data = compiled_data.groupby(['filename'])['valid_cols'].apply(','.join).reset_index()['valid_cols']
         sns.set_theme()
         hist_plot = sns.histplot(comp_data,bins=6)
         hist_plot.axhline(self.no_of_files_read)
+        hist_plot.set_xticklabels(hist_plot.get_xticklabels(), rotation=45, horizontalalignment='right',fontweight='light', fontsize='smaller')
         hist_plot.set_xlabel('Number of valid columns per file')
         hist_plot.set_ylabel('Number of files')
         hist_plot.set(title = 'Count of files with valid columns')
         fig = hist_plot.get_figure()
-        fig.set_size_inches((12.8,7.2))
-        fig.savefig(self.folder_to_plot+'no_file_valid_col.png')
+#        fig.set_size_inches((12.8,7.2))
+        fig.savefig(self.folder_to_plot+'no_file_valid_col.jpg')
         fig.clf()
+        print(comp_data.value_counts)
 
     def column_type(self):
         '''

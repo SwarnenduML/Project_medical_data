@@ -52,7 +52,7 @@ class NewDataGeneration(object):
 #                final_data = data[c][start[i]:end[i]]
                 #            print(c)
                 while final_data[c].isna().any():
-                    if counter > int(self.config_module['data']['time_in_middle']):
+                    if counter > int(self.config_module['time_in_middle']):
                         break
                     else:
                         counter = counter+1
