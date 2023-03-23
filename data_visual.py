@@ -11,6 +11,7 @@ class DataVisual(object):
         self.compiled_data = data
         self.config_obj = config_obj
         self.folder_to_plot = self.config_obj['data']['folder_to_plot']+'/'
+        self.no_of_files_read = len(list(os.listdir(self.config_obj['folder_to_read'])))
         if not os.path.exists(self.config_obj['data']['folder_to_plot']):
             os.mkdir(self.config_obj['data']['folder_to_plot'])
             print("Directory not there. Hence creating")
@@ -51,7 +52,9 @@ class DataVisual(object):
         data_plot = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
         data_plot = data_plot.groupby(['filename']).mean()
         hist_plot = sns.histplot(data=data_plot[['percentage non-nulls before', 'percentage non-nulls after']], element='step',
-                                 binwidth=2).set_title("Percentage of non-nulls per file")
+                                 binwidth=2)
+        hist_plot.axhline(self.no_of_files_read)
+        hist_plot = hist_plot.set_title("Percentage of non-nulls per file")
         fig = hist_plot.get_figure()
         fig.set_size_inches((12.8,7.2))
         fig.savefig(self.folder_to_plot+"per_non_nulls_file.png")
@@ -99,6 +102,7 @@ class DataVisual(object):
         comp_data = comp_data.reset_index(drop=True)
         sns.set_theme()
         hist_plot = sns.histplot(comp_data,bins=6)
+        hist_plot.axhline(self.no_of_files_read)
         hist_plot.set_xlabel('Number of valid columns per file')
         hist_plot.set_ylabel('Number of files')
         hist_plot.set(title = 'Count of files with valid columns')
@@ -118,6 +122,7 @@ class DataVisual(object):
         comp_data['valid_cols'] = comp_data.index
         sns.set_theme()
         bar_plot = sns.barplot(data = comp_data, y = 'filename',x = 'valid_cols')
+        bar_plot.axhline(self.no_of_files_read)
         bar_plot.set_xlabel('Attribute')
         bar_plot.set_ylabel('Number of files')
         bar_plot.set(title = 'Count of files with type columns')
