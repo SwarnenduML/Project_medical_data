@@ -22,7 +22,7 @@ class DataStatistics(object):
         folder_to_write = config_param["folder_to_write"]
         files_to_read = list(os.listdir(folder_to_read))
         each_file_summary_gen = pd.DataFrame(
-            columns=['filename', 'valid_cols', 'start','end','nulls_before',
+            columns=['filename', 'valid_cols', 'nulls_before',
                                     'non_nulls_before','nulls_after','non_nulls_after','reason'])
         start_time = time.time()
         for i,file_to_read in enumerate(files_to_read):
@@ -34,7 +34,7 @@ class DataStatistics(object):
 #            output_data = output_data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
             data_preprocess_obj = data_preprocess.DataPreprocess(input_data, self.config_module)
             start,end = data_preprocess_obj.start_end_valid_stat()
-            tmp_df_file = pd.DataFrame(columns=['filename', 'valid_cols', 'start','end','nulls_before',
+            tmp_df_file = pd.DataFrame(columns=['filename', 'valid_cols', 'nulls_before',
                                     'non_nulls_before','nulls_after','non_nulls_after','percentage non-nulls before',
                                                         'percentage non-nulls after','diff non nulls','diff non null percentage','reason'])
             for i , c in enumerate(input_data.columns):
@@ -55,10 +55,10 @@ class DataStatistics(object):
                 per_nonnulls_before = float("{:.2f}".format(values_before / input_data.shape[0] * 100))
                 per_nonnulls_after = float("{:.2f}".format(values_after / input_data.shape[0] * 100))
                 diff_non_nulls, diff_non_null_per = values_after-values_before, per_nonnulls_after-per_nonnulls_before
-                tmp_df_each_col = pd.DataFrame([[file_to_read, c, start[i], end[i], null_before, values_before,
+                tmp_df_each_col = pd.DataFrame([[file_to_read, c, null_before, values_before,
                                                  nulls_after, values_after ,per_nonnulls_before, per_nonnulls_after,
                                                  diff_non_nulls, diff_non_null_per,reason]],
-                                               columns=['filename', 'valid_cols', 'start', 'end', 'nulls_before',
+                                               columns=['filename', 'valid_cols', 'nulls_before',
                                                         'non_nulls_before', 'nulls_after', 'non_nulls_after',
                                                         'percentage non-nulls before',
                                                         'percentage non-nulls after','diff non nulls','diff non null percentage', 'reason'])

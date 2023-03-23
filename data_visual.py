@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 class DataVisual(object):
     '''
@@ -21,11 +22,13 @@ class DataVisual(object):
 
         :return:
         '''
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
         sns.set_theme()
         data_plot = self.compiled_data[self.compiled_data['reason']!='not a valid column. too many missing values']
         hist_plot = sns.histplot(data =data_plot[['percentage non-nulls before', 'percentage non-nulls after']], binwidth = 2,element="step").set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
-        fig.set_size_inches((12.8,7.2))
+#        fig.set_size_inches((12.8,7.2))
         fig.savefig(self.folder_to_plot+"tot_non_nulls.png")
         fig.clf()
 
@@ -38,7 +41,9 @@ class DataVisual(object):
         data_plot = self.compiled_data[self.compiled_data['reason']!='not a valid column. too many missing values']
         hist_plot = sns.histplot(data= np.log(data_plot[['percentage non-nulls before', 'percentage non-nulls after']])).set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
-        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
+#        fig.set_size_inches((12.8,7.2))
         fig.savefig(self.folder_to_plot+"log_tot_non_nulls.png")
         fig.clf()
 
@@ -56,7 +61,9 @@ class DataVisual(object):
         hist_plot.axhline(self.no_of_files_read)
         hist_plot = hist_plot.set_title("Percentage of non-nulls per file")
         fig = hist_plot.get_figure()
-        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
+#        fig.set_size_inches((12.8,7.2))
         fig.savefig(self.folder_to_plot+"per_non_nulls_file.png")
         fig.clf()
 
@@ -78,11 +85,15 @@ class DataVisual(object):
         input_data = input_data.rename({'index_i': 'index'}, axis = 1)
         merged_df = input_data.merge(output_data, how = "left", on = 'index')
         for c in output_data.columns[1:]:
-            sns.set_theme()
-            line_plot = sns.lineplot(data = merged_df[[c+'_i',c]])
-            line_plot.set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
+            fig, axes = plt.subplots(1, 2, sharey=True)
+            line_plot = sns.lineplot(ax= axes[0],data = merged_df[c+'_i'])
+            axes[0].set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
+            line_plot = sns.lineplot(ax= axes[1],data = merged_df[c])
+            axes[1].set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
             fig = line_plot.get_figure()
-            fig.set_size_inches((12.8, 7.2))
+ #           fig.set_size_inches((12.8, 7.2))
+            manager = plt.get_current_fig_manager()
+            manager.full_screen_toggle()
             fig.savefig(self.folder_to_plot+'comparision_on_'+c+'.png')
             fig.clf()
         print("done")
@@ -104,6 +115,8 @@ class DataVisual(object):
         hist_plot.set(title = 'Count of files with valid columns')
         fig = hist_plot.get_figure()
 #        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
         fig.savefig(self.folder_to_plot+'no_file_valid_col.jpg')
         fig.clf()
         print(comp_data.value_counts)
@@ -124,7 +137,9 @@ class DataVisual(object):
         bar_plot.set_ylabel('Number of files')
         bar_plot.set(title = 'Count of files with type columns')
         fig = bar_plot.get_figure()
-        fig.set_size_inches((12.8,7.2))
+#        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
         fig.savefig(self.folder_to_plot+'type_col_file.png')
         fig.clf()
 
@@ -161,12 +176,16 @@ class DataVisual(object):
         input_data = input_data.rename({'index_i': 'index'}, axis=1)
         merged_df = input_data.merge(output_data, how="left", on='index')
         for c in output_data.columns[1:]:
-            sns.set_theme()
-            line_plot = sns.lineplot(data=merged_df[[c + '_i', c]])
-            line_plot.set(title = file, xlabel =  'index', ylabel = 'value')
+            fig, axes = plt.subplots(1, 2, sharey=True)
+            line_plot = sns.lineplot(ax= axes[0],data = merged_df[c+'_i'])
+            axes[0].set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
+            line_plot = sns.lineplot(ax= axes[1],data = merged_df[c])
+            axes[1].set(title = input_path_for_visual, xlabel = 'index', ylabel = 'value')
             fig = line_plot.get_figure()
-            fig.set_size_inches((12.8, 7.2))
-            fig.savefig(self.folder_to_plot+'comp_' + c + '_'+file[:-4]+'.png')
+#            fig.set_size_inches((12.8, 7.2))
+            manager = plt.get_current_fig_manager()
+            manager.full_screen_toggle()
+            fig.savefig(self.folder_to_plot+'comparision_on_'+c+'.png')
             fig.clf()
         print("done")
 
@@ -192,7 +211,9 @@ class DataVisual(object):
             line_plot = sns.lineplot(data=merged_df[[col + '_i', col]])
             line_plot.set(title = file, xlabel =  'index', ylabel = 'value')
             fig = line_plot.get_figure()
-            fig.set_size_inches((12.8, 7.2))
+#            fig.set_size_inches((12.8, 7.2))
+            manager = plt.get_current_fig_manager()
+            manager.full_screen_toggle()
             fig.savefig(self.folder_to_plot+'max_diff_comp_' + col + '_'+file[:-4]+'.png')
             fig.clf()
         else:
