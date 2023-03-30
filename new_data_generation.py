@@ -31,7 +31,7 @@ class NewDataGeneration(object):
         files_to_read = list(os.listdir(folder_to_read))
         for file_to_read in files_to_read:
             print(file_to_read)
-#            file_to_read = '003-210510-144013.csv'
+#            file_to_read = '004-211227-103238.csv'
             start_time = time.time()
             file = folder_to_read + "/" + file_to_read
             data = pd.read_csv(file)

@@ -17,6 +17,6 @@ data_for_visual : "003-210525-185548.csv"
 
 #######  Threshold values for detection of records
 
-threshold_dict : {'HR (bpm)': 0.01, 'T1 (°C)': 0.01, 'T2 (°C)': 0.01, 'SPO2 (%)': 0.01, 'AWRR (rpm)': 0.01, 'CO2 (mmHg)': 0.01}
+threshold_dict : {'HR (bpm)': 0.01, 'T1': 0.01, 'T2': 0.01, 'SPO2 (%)': 0.01, 'AWRR (rpm)': 0.01, 'CO2 (mmHg)': 0.01}
 # range of the threshold should be between 0 and 1 - let say x
 # the value should be between max(value)*(1+x) and min(value)*(1-x) else median of all training values are inserted

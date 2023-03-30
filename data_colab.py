@@ -21,6 +21,8 @@ class DataColab(object):
         '''
         start_index = self.data_act.index[0]
         end_index = self.data_act.index[-1]
+        if c in ['T1 (°C)', 'T2 (°C)']:
+            c = c[:2]
         threshold = self.config_file['threshold_dict'][c]
         max_data = self.data_act.max()*(1+threshold)
         min_data = self.data_act.min()*(1-threshold)
