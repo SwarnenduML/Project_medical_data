@@ -8,8 +8,9 @@ class DataPreprocess(object):
     '''
     def __init__(self, data, config_object):
         self.data = data
-        self.time_in_middle = int(config_object["time_in_middle"])
-        self.time_trail_preceed = float(config_object["time_trail_preceed"])
+        self.samples_missed = int(config_object["samples_missed"])
+        self.per_data_mis_init = float(config_object['per_data_mis_init'])
+        self.per_data_mis_end = float(config_object['per_data_mis_end'])
 
     def count_dups(self,nums):
         element = []
@@ -37,7 +38,7 @@ class DataPreprocess(object):
             if np.isnan(elem).any():
                 x = [i for i, x in enumerate(elem) if np.isnan(x)]
                 for i in x:
-                    if dups[i] <= self.time_in_middle:
+                    if dups[i] <= self.samples_missed:
                         pos = 1
                     else:
                         pos = 0
@@ -60,14 +61,14 @@ class DataPreprocess(object):
         end_index = []
         for c in data.columns:
             elem, dups = self.count_dups(data[c])
-            if math.isnan(elem[0]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+            if math.isnan(elem[0]) and dups[0]/data.shape[0] < self.per_data_mis_init:
                 start_index.append(dups[0])
             elif math.isnan(elem[0]):
                 print("Too much NULLs in the front for column "+ c)
                 start_index.append(data.shape[0])
             else:
                 start_index.append(0)
-            if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+            if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.per_data_mis_end:
                 end_index.append(data.shape[0]-dups[-1]+1)
             elif math.isnan(elem[-1]):
                 print("Too much NULLs at the back for column " + c)
@@ -91,14 +92,14 @@ class DataPreprocess(object):
                 end_index.append(-1)
             else:
                 elem, dups = self.count_dups(data[c])
-                if math.isnan(elem[0]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+                if math.isnan(elem[0]) and dups[0]/data.shape[0] < self.per_data_mis_init:
                     start_index.append(dups[0])
                 elif math.isnan(elem[0]):
                     print("Too much NULLs in the front for column "+ c)
                     start_index.append(data.shape[0])
                 else:
                     start_index.append(0)
-                if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.time_trail_preceed:
+                if math.isnan(elem[-1]) and dups[0]/data.shape[0] < self.per_data_mis_end:
                     end_index.append(dups[-1])
                 elif math.isnan(elem[-1]):
                     print("Too much NULLs at the back for column " + c)

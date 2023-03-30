@@ -31,7 +31,7 @@ class NewDataGeneration(object):
         files_to_read = list(os.listdir(folder_to_read))
         for file_to_read in files_to_read:
             print(file_to_read)
-#            file_to_read = '004-211227-103238.csv'
+#            file_to_read = '014-220303-183038.csv'
             start_time = time.time()
             file = folder_to_read + "/" + file_to_read
             data = pd.read_csv(file)
@@ -52,7 +52,7 @@ class NewDataGeneration(object):
 #                final_data = data[c][start[i]:end[i]]
                 #            print(c)
                 while final_data[c].isna().any():
-                    if counter > int(self.config_module['time_in_middle']):
+                    if counter > int(self.config_module['samples_missed']):
                         break
                     else:
                         counter = counter+1

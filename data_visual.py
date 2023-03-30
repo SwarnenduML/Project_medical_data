@@ -8,11 +8,12 @@ class DataVisual(object):
     '''
 
     '''
-    def __init__(self, data, config_obj):
+    def __init__(self, data, config_obj, valid_data):
         self.compiled_data = data
         self.config_obj = config_obj
         self.folder_to_plot = self.config_obj['folder_to_plot']+'/'
         self.no_of_files_read = len(list(os.listdir(self.config_obj['folder_to_read'])))
+        self.valid_data = valid_data
         if not os.path.exists(self.config_obj['folder_to_plot']):
             os.mkdir(self.config_obj['folder_to_plot'])
             print("Directory not there. Hence creating")
@@ -25,7 +26,7 @@ class DataVisual(object):
         manager = plt.get_current_fig_manager()
         manager.full_screen_toggle()
         sns.set_theme()
-        data_plot = self.compiled_data[self.compiled_data['reason']!='not a valid column. too many missing values']
+        data_plot = self.valid_data
         hist_plot = sns.histplot(data =data_plot[['percentage non-nulls before', 'percentage non-nulls after']], binwidth = 2,element="step").set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
 #        fig.set_size_inches((12.8,7.2))
@@ -38,7 +39,7 @@ class DataVisual(object):
         :return:
         '''
         sns.set_theme()
-        data_plot = self.compiled_data[self.compiled_data['reason']!='not a valid column. too many missing values']
+        data_plot = self.valid_data
         hist_plot = sns.histplot(data= np.log(data_plot[['percentage non-nulls before', 'percentage non-nulls after']])).set_title("Percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
         manager = plt.get_current_fig_manager()
@@ -54,7 +55,7 @@ class DataVisual(object):
         :return:
         '''
         sns.set_theme()
-        data_plot = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
+        data_plot = self.valid_data
         data_plot = data_plot.groupby(['filename']).mean()
         hist_plot = sns.histplot(data=data_plot[['percentage non-nulls before', 'percentage non-nulls after']], element='step',
                                  binwidth=2)
@@ -104,7 +105,7 @@ class DataVisual(object):
 
         :return:
         '''
-        compiled_data = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
+        compiled_data = self.valid_data
         comp_data = compiled_data.groupby(['filename'])['valid_cols'].apply(','.join).reset_index()['valid_cols']
         sns.set_theme()
         hist_plot = sns.histplot(comp_data,bins=6)
@@ -126,8 +127,7 @@ class DataVisual(object):
 
         :return:
         '''
-        compiled_data = self.compiled_data[
-            self.compiled_data['reason'] != 'not a valid column. too many missing values']
+        compiled_data = self.valid_data
         comp_data = compiled_data.groupby('valid_cols').count()
         comp_data['valid_cols'] = comp_data.index
         sns.set_theme()
@@ -148,7 +148,7 @@ class DataVisual(object):
 
         :return:
         '''
-        compiled_data = self.compiled_data[self.compiled_data['reason'] != 'not a valid column. too many missing values']
+        compiled_data = self.valid_data
         comp_data = compiled_data.groupby('filename').count()['valid_cols']
         file_max_val_col = compiled_data[compiled_data['filename'].isin(list(comp_data[comp_data == comp_data.max()].index))]
         file_max_per = list(file_max_val_col[file_max_val_col['diff non null percentage']==file_max_val_col['diff non null percentage'].max()]['filename'])[0]

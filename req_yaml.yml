@@ -1,14 +1,14 @@
 #### Main run
-time_in_middle : 20 # explainability is issue
-time_trail_preceed: 1 #0.05 1 - fully take everything, closer to 0 is reject everything - hw much data is allowed to be worked with
-        # cobimaed percentage should be reflected here - Need
+samples_missed : 20 # explainability is issue
+per_data_mis_init: 0.1 #0 to 0.5 0 fully take everything, 0.5 - ok to miss 1st half of data
+per_data_mis_end: 0.1 #0 to 0.5 0 fully take everything, 0.5 - ok to miss last half of data
 shifting : 4 # change the name to regression window
 folder_to_read : "C:/Users/sengupta/Downloads/erizt_data"
 folder_to_write : "C:/Users/sengupta/Downloads/erizt_data_generated"
 folder_to_plot : "C:/Users/sengupta/Downloads/plots"
 data_gen : True
-data_stat : False
-data_visualize : False
+data_stat : True
+data_visualize : True
 
 #### Visualization ####
 
