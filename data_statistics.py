@@ -95,4 +95,4 @@ class DataStatistics(object):
         result_df.drop(columns = 'reason', inplace=True)
         result_df.to_csv(folder_to_write + "/" + "total_summary_of_valid_data.csv")
         result_df.to_excel(folder_to_write + "/" + "summary_of_valid_data.xlsx")
-        return each_file_summary_gen
+        return each_file_summary_gen, result_df
