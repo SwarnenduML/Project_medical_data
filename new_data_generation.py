@@ -42,8 +42,8 @@ class NewDataGeneration(object):
             data = data[valid_col]
 
             start, end = data_preprocess_obj.start_end()
-            start_index = min(start, default=0)
-            end_index = max(end, default=-1)
+            start_index = max(start, default=0)
+            end_index = min(end, default=-1)
 
             final_data = data[start_index:end_index]
 
@@ -86,7 +86,7 @@ class NewDataGeneration(object):
 
                         data_colab_obj = data_colab.DataColab(final_data[c], pred_fwd, pred_index_fwd, pred_rev,
                                                               pred_index_rev, self.config_module)
-                        final_data[c] = data_colab_obj.colab()
+                        final_data[c] = data_colab_obj.colab(c)
             print(time.time() - start_time)
             final_data.to_csv(folder_to_write + "/" + file_to_read[:-4] + "_generated.csv")
             final_data.to_excel("C:/Users/sengupta/Downloads/erizt_data_generated_excel/"+file_to_read[:-4]+"_gen.xlsx")

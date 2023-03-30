@@ -12,17 +12,18 @@ class DataColab(object):
         self.fwd_index = fwd_index
         self.rev_data = rev_data
         self.rev_index = rev_index
-        self.threshold = float(config_file["threshold"])
+        self.config_file = config_file
 
-    def colab(self):
+    def colab(self,c):
         '''
 
         :return:
         '''
         start_index = self.data_act.index[0]
         end_index = self.data_act.index[-1]
-        max_data = self.data_act.max()*(1+self.threshold)
-        min_data = self.data_act.max()*(1-self.threshold)
+        threshold = self.config_file['threshold_dict'][c]
+        max_data = self.data_act.max()*(1+threshold)
+        min_data = self.data_act.min()*(1-threshold)
         median_data = self.data_act.median()
         for val_i, i in enumerate(self.fwd_index):
             for val_j, j in enumerate(i):
