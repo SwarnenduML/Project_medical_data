@@ -11,6 +11,10 @@ class DataPreprocess(object):
         self.samples_missed = int(config_object["samples_missed"])
         self.per_data_mis_init = float(config_object['per_data_mis_init'])
         self.per_data_mis_end = float(config_object['per_data_mis_end'])
+        assert self.per_data_mis_init > 0
+        assert self.per_data_mis_init < 0.5
+        assert self.per_data_mis_end > 0
+        assert self.per_data_mis_end < 0.5
 
     def count_dups(self,nums):
         element = []

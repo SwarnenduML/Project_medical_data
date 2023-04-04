@@ -47,6 +47,12 @@ def main_prog():
             data_visual_obj.create_comp_file_col(file_no,c)
             data_visual_obj.create_comp_file_col(file_per,c)
 
+        data_visual_obj.data_retention_per()
+        data_visual_obj.data_gen_per()
+        data_visual_obj.data_gen_per_atr()
+        data_visual_obj.data_retention_per_atr()
+        data_visual_obj.per_gen_atr()
+
 
 
 

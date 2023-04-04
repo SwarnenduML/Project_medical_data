@@ -19,6 +19,8 @@ class NewDataGeneration(object):
     '''
     def __init__(self, config_module):
         self.config_module = config_module
+        if not os.path.exists(self.config_module['folder_to_write']):
+            os.mkdir(self.config_module['folder_to_write'])
 
     def create_data(self):
         '''
@@ -89,5 +91,9 @@ class NewDataGeneration(object):
                         final_data[c] = data_colab_obj.colab(c)
             print(time.time() - start_time)
             final_data.to_csv(folder_to_write + "/" + file_to_read[:-4] + "_generated.csv")
+            if not os.path.exists("C:/Users/sengupta/Downloads/erizt_data_generated_excel/"):
+                os.mkdir("C:/Users/sengupta/Downloads/erizt_data_generated_excel/")
             final_data.to_excel("C:/Users/sengupta/Downloads/erizt_data_generated_excel/"+file_to_read[:-4]+"_gen.xlsx")
+            if not os.path.exists("C:/Users/sengupta/Downloads/erizt_data_excel/"):
+                os.mkdir("C:/Users/sengupta/Downloads/erizt_data_excel/")
             pd.read_csv(folder_to_read+"/"+file_to_read).to_excel("C:/Users/sengupta/Downloads/erizt_data_excel/"+file_to_read[:-3]+"xlsx")

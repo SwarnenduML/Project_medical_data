@@ -14,6 +14,7 @@ class DataColab(object):
         self.rev_index = rev_index
         self.config_file = config_file
 
+
     def colab(self,c):
         '''
 

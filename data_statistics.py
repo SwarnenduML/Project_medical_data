@@ -13,6 +13,9 @@ class DataStatistics(object):
 
     def __init__(self, config_module):
         self.config_module = config_module
+        if not os.path.exists(self.config_module['folder_to_write']):
+            os.mkdir(self.config_module['folder_to_write'])
+
 
     def get_statistics(self):
         '''
@@ -28,12 +31,11 @@ class DataStatistics(object):
                      'non_nulls_before', 'nulls_after', 'non_nulls_after', 'reason'])
         start_time = time.time()
         for i, file_to_read in enumerate(files_to_read):
-            #            file_to_read = '002-210510-165039.csv'
+            #file_to_read = '003-211214-102714.csv'
             print(file_to_read)
             input_data = pd.read_csv(folder_to_read + "/" + file_to_read)
             output_data = pd.read_csv(folder_to_write + "/" + file_to_read[:-4] + "_generated.csv")
             input_data = input_data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
-            #            output_data = output_data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
             data_preprocess_obj = data_preprocess.DataPreprocess(input_data, self.config_module)
             start, end = data_preprocess_obj.start_end_valid_stat()
             tmp_df_file = pd.DataFrame(columns=['filename', 'valid_cols', 'nulls_before',
@@ -52,6 +54,8 @@ class DataStatistics(object):
                     reason = "too many nulls at start"
                 elif -1 == end[i]:
                     reason = "too many nulls at end"
+                elif output_data[c].shape[0] == 0:
+                    reason = "no data to process"
                 else:
                     reason = ""
                     nulls_after = output_data[c].isnull().sum()
@@ -59,18 +63,19 @@ class DataStatistics(object):
                 per_nonnulls_before = float("{:.2f}".format(values_before / input_data.shape[0] * 100))
                 per_nonnulls_after = float("{:.2f}".format(values_after / input_data.shape[0] * 100))
                 diff_non_nulls, diff_non_null_per = values_after - values_before, per_nonnulls_after - per_nonnulls_before
-                data_generation = values_after - values_before
+                data_generation = float("{:.2f}".format((values_after - values_before)*100/ input_data.shape[0]))
                 if data_generation >= 0:
                     data_retention = 100
                 else:
-                    data_retention = float("{:.2f}".format((values_before - values_after) * 100 / values_before))
+                    data_retention = float("{:.2f}".format((values_after) * 100 / input_data.shape[0]))
                 data_missing_init = float(
                     "{:.2f}".format((input_data.shape[0] - input_data[c].count()) * 100 / input_data.shape[0]))
                 if c in output_data.columns:
                     data_missing_final = float(
                         "{:.2f}".format((input_data.shape[0] - output_data[c].count()) * 100 / input_data.shape[0]))
                 else:
-                    data_missing_final = 100
+                    data_missing_final = 0
+
                 tmp_df_each_col = pd.DataFrame([[file_to_read, c, null_before, values_before,
                                                  nulls_after, values_after, per_nonnulls_before, per_nonnulls_after,
                                                  diff_non_nulls, diff_non_null_per, reason,
