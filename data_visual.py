@@ -46,7 +46,7 @@ class DataVisual(object):
         data_plot = self.valid_data
         hist_plot = sns.histplot(
             data=np.log(data_plot[['percentage non-nulls before', 'percentage non-nulls after']])).set_title(
-            "Percentage of non-nulls per column per file")
+            "Log of percentage of non-nulls per column per file")
         fig = hist_plot.get_figure()
         manager = plt.get_current_fig_manager()
         manager.full_screen_toggle()
@@ -96,9 +96,9 @@ class DataVisual(object):
         for c in output_data.columns[1:]:
             fig, axes = plt.subplots(1, 2, sharey=True)
             line_plot = sns.lineplot(ax=axes[0], data=merged_df[c + '_i'])
-            axes[0].set(title=input_path_for_visual, xlabel='index', ylabel='value')
+            axes[0].set(title="Input", xlabel='index', ylabel='value')
             line_plot = sns.lineplot(ax=axes[1], data=merged_df[c])
-            axes[1].set(title=input_path_for_visual, xlabel='index', ylabel='value')
+            axes[1].set(title="Output", xlabel='index', ylabel='value')
             fig = line_plot.get_figure()
             #           fig.set_size_inches((12.8, 7.2))
             manager = plt.get_current_fig_manager()
@@ -317,5 +317,20 @@ class DataVisual(object):
             manager = plt.get_current_fig_manager()
             manager.full_screen_toggle()
             fig.savefig(self.folder_to_plot + 'val_data_gen_' + c + '.png')
+            fig.clf()
+            plt.close()
+
+    def per_retention_atr(self):
+        compiled_data = self.valid_data
+        atr = list(compiled_data['valid_cols'].unique())
+        for c in atr:
+            tmp_list = compiled_data[compiled_data['valid_cols'] == c]
+            hist_plot = sns.histplot(data=tmp_list['data retention'], bins=10, element="step")
+            hist_plot.set_ylabel('Percentage of data retention')
+            hist_plot.set(title='Total percentage of data retention for attribute ' + c)
+            fig = hist_plot.get_figure()
+            manager = plt.get_current_fig_manager()
+            manager.full_screen_toggle()
+            fig.savefig(self.folder_to_plot + 'val_data_ret_' + c + '.png')
             fig.clf()
             plt.close()

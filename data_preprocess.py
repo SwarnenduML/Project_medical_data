@@ -17,6 +17,12 @@ class DataPreprocess(object):
         assert self.per_data_mis_end < 0.5
 
     def count_dups(self,nums):
+        '''
+        Here, the number of duplicates are counted. The consecutive NULLs and same values are counted.
+        Eg nums - 1,1,2,3,2,1,1,2,2,1 ->  element,freque - 1,2,3,2,1,2,1 ; 2,1,1,1,2,2,1
+        :param nums: data in which the running count of duplicates are to be counted
+        :return: The return will be the element sequence and their corresponding running frequencies
+        '''
         element = []
         freque = []
         running_count = 1
@@ -32,6 +38,11 @@ class DataPreprocess(object):
         return element,freque
 
     def col_details(self):
+        '''
+        This function tells us if the column is a valid column or not. A valid column is a column if the number of
+        consecutive NULLs is less than the number of samples missed as specified in the yaml file.
+        :return:
+        '''
         df = self.data
         valid_col = []
         for col in df.columns:
@@ -83,7 +94,8 @@ class DataPreprocess(object):
 
     def start_end_valid_stat(self):
         '''
-        This function would determine the starting points and the ending points in the valid columns
+        This function would determine the starting points and the ending points in the valid columns. This is needed in
+        the used in the generation of the statistical file generation.
         :return: The start and end points of the data
         '''
         valid_col = self.col_details()

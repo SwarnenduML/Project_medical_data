@@ -11,8 +11,8 @@ class TrainTestDSCreation(object):
 
     def train_ds(self):
         '''
-
-        :return:
+        Here, the training shifted dataset is created. The forward and reverse dataset is created
+        :return: forward and reverse dataset
         '''
         train_ds_fwd = []
         train_ds_rev = []
@@ -28,8 +28,8 @@ class TrainTestDSCreation(object):
 
     def test_ds(self):
         '''
-
-        :return:
+        The test dataset is created for the forward and reverse dataset.
+        :return: the index and the test datasets are returned
         '''
         test_ds_fwd = []
         fwd_pred_index = []

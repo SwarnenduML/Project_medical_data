@@ -24,7 +24,7 @@ class NewDataGeneration(object):
 
     def create_data(self):
         '''
-
+        This is the driver code. Here the files to read and write are generated.
         :return:
         '''
         config_param = self.config_module
@@ -40,9 +40,13 @@ class NewDataGeneration(object):
             data = data[['HR (bpm)', 'T1 (°C)', 'T2 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']]
 
             data_preprocess_obj = data_preprocess.DataPreprocess(data, self.config_module)
+            # Here the valid columns are generated. Only data from these valid columns are considered
             valid_col = data_preprocess_obj.col_details()
             data = data[valid_col]
 
+            # The start and the end of the slicing of the data is considered. The max of all the start index of the
+            # valid columns in a file and the min of the end index of the valid columns is to be considered and
+            # stripping is to be done
             start, end = data_preprocess_obj.start_end()
             start_index = max(start, default=0)
             end_index = min(end, default=-1)

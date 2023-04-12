@@ -8,7 +8,7 @@ import data_preprocess
 
 class DataStatistics(object):
     '''
-
+    This class helps in generation of the summary file.
     '''
 
     def __init__(self, config_module):
@@ -19,8 +19,11 @@ class DataStatistics(object):
 
     def get_statistics(self):
         '''
-
-        :return:
+        This function helps in the generation of the summary and the valid files. The summary and the valid files contain
+        information regarding the number of nulls, non-nulls, valid column or not, reason for not valid column and other
+        details.
+        :return: It returns 2 files. One is a summary file which has all the files. The second file contains details on
+        only the columns with valid columns.
         '''
         config_param = self.config_module
         folder_to_read = config_param["folder_to_read"]

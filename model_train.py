@@ -1,15 +1,8 @@
-import numpy as np
-import pandas as pd
-import numpy as np
-import os
-import math
 from sklearn import linear_model, metrics
-import math
-from sklearn.metrics import mean_squared_error
 
 class ModelTrain(object):
     '''
-
+    This class trains the model and returns the prediction output of the dataset for it to be filled into the null value
     '''
 
     def __init__(self, data_train, data_test):
@@ -18,8 +11,8 @@ class ModelTrain(object):
 
     def train_pred_ds(self):
         '''
-
-        :return:
+        This function predicts the values that could be present in the null values
+        :return: the predicted values at the null positions
         '''
         x_train = self.data_train[self.data_train.columns[:-1]]
         y_train = self.data_train[self.data_train.columns[-1]]

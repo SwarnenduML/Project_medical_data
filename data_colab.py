@@ -3,7 +3,7 @@ import math
 
 class DataColab(object):
     '''
-
+    This class helps in colaboration of data and filling the missing gaps with data
     '''
 
     def __init__(self, data_act, fwd_data, fwd_index, rev_data, rev_index, config_file):
@@ -17,7 +17,10 @@ class DataColab(object):
 
     def colab(self,c):
         '''
-
+        Here, the missing places are filled up with data. The data can be from either the forward linear regression
+        or it can be from the backward linear regression, or it can be from the median if the value is beyond the threshold
+        of the attribute in question.
+        In case multiple positions are found, then the average of those values are considered.
         :return:
         '''
         start_index = self.data_act.index[0]

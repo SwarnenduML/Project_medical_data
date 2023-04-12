@@ -14,8 +14,9 @@ class DataTransform(object):
 
     def shifting(self, type):
         '''
-
-        :return:
+        This function generates the shifted version of the dataset such that the linear regression can be done. The type
+        can be either forward shift "fwd" or reverse shift "bck"
+        :return: Returns the data after the shift is done per column
         '''
         data = pd.DataFrame(self.data)
         data.columns = ["init"]
