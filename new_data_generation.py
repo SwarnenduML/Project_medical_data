@@ -31,7 +31,12 @@ class NewDataGeneration(object):
         folder_to_read = config_param["folder_to_read"]
         folder_to_write = config_param["folder_to_write"]
         files_to_read = list(os.listdir(folder_to_read))
+
+        # Need to save the number of new additions done to the dataset in an excel
+        data_added = pd.DataFrame(columns=['filename', 'columns', 'data_added'])
+
         for file_to_read in files_to_read:
+            tmp_data_added = pd.DataFrame(columns=['filename', 'columns', 'data_added'])
             print(file_to_read)
 #            file_to_read = '014-220303-183038.csv'
             start_time = time.time()
@@ -55,6 +60,7 @@ class NewDataGeneration(object):
 
             for i,c in enumerate(final_data.columns):
                 counter = 0
+                tmp_data_added = pd.DataFrame(columns=['filename', 'columns', 'data_added'])
 #                final_data = data[c][start[i]:end[i]]
                 #            print(c)
                 while final_data[c].isna().any():
@@ -92,7 +98,14 @@ class NewDataGeneration(object):
 
                         data_colab_obj = data_colab.DataColab(final_data[c], pred_fwd, pred_index_fwd, pred_rev,
                                                               pred_index_rev, self.config_module)
-                        final_data[c] = data_colab_obj.colab(c)
+                        final_data[c], count = data_colab_obj.colab(c)
+                        tmp_df_each_col = pd.DataFrame([[file_to_read, c , count]],
+                                                       columns=['filename', 'columns','data_added'])
+                        tmp_data_added = tmp_data_added.append(tmp_df_each_col, ignore_index=True)
+                tmp_data_added = tmp_data_added.groupby(['filename','columns']).sum()
+                if tmp_data_added.shape != (0,0):
+                    tmp_data_added[['filename', 'columns']] = tmp_data_added.index[0]
+                data_added = data_added.append(tmp_data_added,ignore_index=True)
             print(time.time() - start_time)
             final_data.to_csv(folder_to_write + "/" + file_to_read[:-4] + "_generated.csv")
             if not os.path.exists("C:/Users/sengupta/Downloads/erizt_data_generated_excel/"):
@@ -101,3 +114,6 @@ class NewDataGeneration(object):
             if not os.path.exists("C:/Users/sengupta/Downloads/erizt_data_excel/"):
                 os.mkdir("C:/Users/sengupta/Downloads/erizt_data_excel/")
             pd.read_csv(folder_to_read+"/"+file_to_read).to_excel("C:/Users/sengupta/Downloads/erizt_data_excel/"+file_to_read[:-3]+"xlsx")
+        data_added.to_excel(folder_to_write + '/' + "data_inserted.xlsx")
+        data_added.to_csv(folder_to_write + '/' + "data_inserted_csv.csv")
+#        print("all done in new_data_generation")

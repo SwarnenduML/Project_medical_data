@@ -10,7 +10,7 @@ class DataVisual(object):
 
     '''
 
-    def __init__(self, data, config_obj, valid_data):
+    def __init__(self, data, config_obj, valid_data, data_inserted):
         self.compiled_data = data
         self.config_obj = config_obj
         self.folder_to_plot = self.config_obj['folder_to_plot'] + '/'
@@ -19,6 +19,7 @@ class DataVisual(object):
         if not os.path.exists(self.config_obj['folder_to_plot']):
             os.mkdir(self.config_obj['folder_to_plot'])
             print("Directory not there. Hence creating")
+        self.data_inserted = data_inserted
 
     def tot_nulls_per(self):
         '''
@@ -99,14 +100,16 @@ class DataVisual(object):
             axes[0].set(title="Input", xlabel='index', ylabel='value')
             line_plot = sns.lineplot(ax=axes[1], data=merged_df[c])
             axes[1].set(title="Output", xlabel='index', ylabel='value')
+            axes[1].set_title("Output")
             fig = line_plot.get_figure()
             #           fig.set_size_inches((12.8, 7.2))
             manager = plt.get_current_fig_manager()
             manager.full_screen_toggle()
             fig.savefig(self.folder_to_plot + 'comparision_on_' + c + '.png')
             fig.clf()
-        print("done")
-        plt.close()
+            plt.close()
+
+    #        print("done")
         # fig.clf()
 
     def number_of_col_used(self):
@@ -169,8 +172,8 @@ class DataVisual(object):
         file_max_no = list(
             file_max_val_col[file_max_val_col['diff non nulls'] == file_max_val_col['diff non nulls'].max()][
                 'filename'])[0]
-        print('Best in number: ' + file_max_no)
-        print('Best in percentage: ' + file_max_per)
+        #print('Best in number: ' + file_max_no)
+        #print('Best in percentage: ' + file_max_per)
         self.create_comp_file(file_max_no)
         self.create_comp_file(file_max_per)
         plt.close()
@@ -195,16 +198,16 @@ class DataVisual(object):
         for c in output_data.columns[1:]:
             fig, axes = plt.subplots(1, 2, sharey=True)
             line_plot = sns.lineplot(ax=axes[0], data=merged_df[c + '_i'])
-            axes[0].set(title=input_path_for_visual, xlabel='index', ylabel='value')
+            axes[0].set(title='Input', xlabel='index', ylabel='value')
             line_plot = sns.lineplot(ax=axes[1], data=merged_df[c])
-            axes[1].set(title=input_path_for_visual, xlabel='index', ylabel='value')
+            axes[1].set(title='Output', xlabel='index', ylabel='value')
             fig = line_plot.get_figure()
             #            fig.set_size_inches((12.8, 7.2))
             manager = plt.get_current_fig_manager()
             manager.full_screen_toggle()
-            fig.savefig(self.folder_to_plot + 'comparision_on_' + c + '.png')
+            fig.savefig(self.folder_to_plot + 'comparision_on_' + c + '_file.png')
             fig.clf()
-        print("done")
+        #print("done")
         plt.close()
 
     def create_comp_file_col(self, file, col):
@@ -236,7 +239,7 @@ class DataVisual(object):
             fig.clf()
         else:
             print(col + ' not found')
-        print("done")
+        #print("done")
         plt.close()
 
     def data_retention_per(self):
@@ -332,5 +335,85 @@ class DataVisual(object):
             manager = plt.get_current_fig_manager()
             manager.full_screen_toggle()
             fig.savefig(self.folder_to_plot + 'val_data_ret_' + c + '.png')
+            fig.clf()
+            plt.close()
+
+    def data_inserted_col(self):
+        '''
+
+        :return:
+        '''
+        data_inserted = self.data_inserted
+        data_inserted = data_inserted.groupby('columns').count()
+        data_inserted['columns'] = data_inserted.index
+        sns.set_theme()
+        bar_plot = sns.barplot(data=data_inserted, y='filename', x='columns')
+        bar_plot.axhline(self.no_of_files_read)
+        bar_plot.set_xlabel('Attribute')
+        bar_plot.set_ylabel('Number of files')
+        bar_plot.set(title='Count of files with type columns')
+        fig = bar_plot.get_figure()
+        #        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
+        fig.savefig(self.folder_to_plot + 'type_col_data_inserted.png')
+        fig.clf()
+        plt.close()
+
+    def data_inserted_col_count(self):
+        '''
+
+        :return:
+        '''
+        data_inserted = self.data_inserted
+        data_inserted = data_inserted.groupby('columns').sum()
+        data_inserted['columns'] = data_inserted.index
+        sns.set_theme()
+        bar_plot = sns.barplot(data=data_inserted, y='data_added', x='columns')
+        bar_plot.set_xlabel('Attribute')
+        bar_plot.set_ylabel('Number of data points inserted')
+        bar_plot.set(title='Count of data inserted with type columns')
+        fig = bar_plot.get_figure()
+        #        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
+        fig.savefig(self.folder_to_plot + 'col_data_inserted_sum.png')
+        fig.clf()
+        plt.close()
+
+    def data_inserted_col_count_mean(self):
+        '''
+
+        :return:
+        '''
+        data_inserted = self.data_inserted
+        data_inserted = data_inserted.groupby('columns').mean()
+        data_inserted['columns'] = data_inserted.index
+        sns.set_theme()
+        bar_plot = sns.barplot(data=data_inserted, y='data_added', x='columns')
+        bar_plot.set_xlabel('Attribute')
+        bar_plot.set_ylabel('Number of data points inserted')
+        bar_plot.set(title='Count of data inserted with type columns')
+        fig = bar_plot.get_figure()
+        #        fig.set_size_inches((12.8,7.2))
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
+        fig.savefig(self.folder_to_plot + 'col_data_inserted_mean.png')
+        fig.clf()
+        plt.close()
+
+
+    def data_ins_atr(self):
+        compiled_data = self.data_inserted
+        atr = list(compiled_data['columns'].unique())
+        for c in atr:
+            tmp_list = compiled_data[compiled_data['columns'] == c]
+            hist_plot = sns.histplot(data=tmp_list['data_added'], bins=10, element="step")
+            hist_plot.set_ylabel('Data added')
+            hist_plot.set(title='Total data points added for attribute ' + c)
+            fig = hist_plot.get_figure()
+            manager = plt.get_current_fig_manager()
+            manager.full_screen_toggle()
+            fig.savefig(self.folder_to_plot + 'val_data_ins_' + c + '.png')
             fig.clf()
             plt.close()

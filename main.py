@@ -37,7 +37,10 @@ def main_prog():
                                         index_col=0)
             valid_data = pd.read_csv(config_object["folder_to_write"] + "/total_summary_of_valid_data.csv",
                                         index_col=0)
-        data_visual_obj = data_visual.DataVisual(compiled_data,config_object,valid_data)
+        # read data inserted
+        data_inserted = pd.read_csv(config_object["folder_to_write"] +'/data_inserted_csv.csv', index_col=0)
+
+        data_visual_obj = data_visual.DataVisual(compiled_data,config_object,valid_data, data_inserted)
         data_visual_obj.tot_nulls_per() # Percentage of non-nulls per column per file before and after
         data_visual_obj.log_tot_nulls_per() # Log of percentage of non-nulls per column per file before and after
         data_visual_obj.non_null_per_file() # Percentage of non-nulls per file before and after
@@ -64,6 +67,13 @@ def main_prog():
         data_visual_obj.data_retention_per_atr() # Visualizes the data retention rate from the initial to the final per attribute
         data_visual_obj.per_gen_atr() # Distribution of data generation per attribute
         data_visual_obj.per_retention_atr() # Distribution of data retention per attribute
+
+
+        # graph generation
+        data_visual_obj.data_inserted_col() # Number of columns in entirity in which data was entered
+        data_visual_obj.data_inserted_col_count() # Total number of data inserted per attribute
+        data_visual_obj.data_inserted_col_count_mean() # Mean number of data inserted per attribute
+        data_visual_obj.data_ins_atr() # Distribution of data inserted per attribute
 
 
 

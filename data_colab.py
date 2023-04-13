@@ -3,7 +3,7 @@ import math
 
 class DataColab(object):
     '''
-    This class helps in colaboration of data and filling the missing gaps with data
+    This class helps in collaboration of data and filling the missing gaps with data
     '''
 
     def __init__(self, data_act, fwd_data, fwd_index, rev_data, rev_index, config_file):
@@ -25,6 +25,7 @@ class DataColab(object):
         '''
         start_index = self.data_act.index[0]
         end_index = self.data_act.index[-1]
+        count = 0
         if c in ['T1 (°C)', 'T2 (°C)']:
             c = c[:2]
         threshold = self.config_file['threshold_dict'][c]
@@ -35,6 +36,7 @@ class DataColab(object):
             for val_j, j in enumerate(i):
                 if j <= end_index and j >= start_index:
                     if math.isnan(self.data_act[j]):
+                        count = count + 1
                         if self.fwd_data[val_i][val_j] > min_data and self.fwd_data[val_i][val_j] < max_data:
                             self.data_act[j] = self.fwd_data[val_i][val_j]
                         else:
@@ -46,10 +48,11 @@ class DataColab(object):
             for val_j, j in enumerate(i):
                 if j <= end_index and j >= start_index:
                     if math.isnan(self.data_act[j]):
+                        count = count + 1
                         if self.rev_data[val_i][val_j] > min_data and self.rev_data[val_i][val_j] < max_data:
                             self.data_act[j] = self.rev_data[val_i][val_j]
                         else:
                             self.data_act[j] = median_data
                     else:
                         self.data_act[j] = (self.rev_data[val_i][val_j] + self.data_act[j])/2
-        return self.data_act
+        return self.data_act, count
