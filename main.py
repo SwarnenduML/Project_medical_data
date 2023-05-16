@@ -3,6 +3,7 @@ import warnings
 import data_statistics
 warnings.filterwarnings("ignore")
 import yaml
+from list_files import ListFiles
 #from configparser import ConfigParser
 
 import new_data_generation
@@ -20,6 +21,7 @@ def main_prog():
     data_gen = config_object["data_gen"]
     data_stat = config_object["data_stat"]
     data_visualize = config_object["data_visualize"]
+    event = config_object['event_logger']
     if data_gen:
         # if there is a need to create data
         data_generator_obj = new_data_generation.NewDataGeneration(config_object)
@@ -74,6 +76,9 @@ def main_prog():
         data_visual_obj.data_inserted_col_count() # Total number of data inserted per attribute
         data_visual_obj.data_inserted_col_count_mean() # Mean number of data inserted per attribute
         data_visual_obj.data_ins_atr() # Distribution of data inserted per attribute
+    if event:
+        lst_files = ListFiles(config_object)
+        lst_files.files_with_col()
 
 
 

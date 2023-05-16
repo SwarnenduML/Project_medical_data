@@ -8,7 +8,8 @@ folder_to_write : "C:/Users/sengupta/Downloads/erizt_data_generated"
 folder_to_plot : "C:/Users/sengupta/Downloads/plots"
 data_gen : False
 data_stat : False
-data_visualize : True
+data_visualize : False
+event_logger : True
 
 #### Visualization ####
 
