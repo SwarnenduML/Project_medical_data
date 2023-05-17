@@ -4,7 +4,7 @@ import data_statistics
 warnings.filterwarnings("ignore")
 import yaml
 from list_files import ListFiles
-#from configparser import ConfigParser
+from data_validation import DataValidation
 
 import new_data_generation
 import data_visual
@@ -78,8 +78,10 @@ def main_prog():
         data_visual_obj.data_ins_atr() # Distribution of data inserted per attribute
     if event:
         lst_files = ListFiles(config_object)
-        lst_files.files_with_col()
-
+        file_to_operate = lst_files.files_with_col()
+        for x in file_to_operate:
+            dv = DataValidation(x)
+            dv.detect_event_hr()
 
 
 
