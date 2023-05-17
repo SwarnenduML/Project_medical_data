@@ -81,7 +81,8 @@ def main_prog():
         file_to_operate = lst_files.files_with_col()
         for x in file_to_operate:
             dv = DataValidation(x)
-            dv.detect_event_hr()
+#            dv.detect_event_hr()
+            dv.detect_event_t1(high = 41, low= 30)
 
 
 

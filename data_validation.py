@@ -31,7 +31,6 @@ class DataValidation:
     def detect_event_t1(self, high=40, low=36):
         high_desc = 'T1 - Temp is too high'
         low_desc = 'T1 - Temp is too low'
-        avg_val = self.means_start["T1 (°C)"]
         data_focus = self.data["T1 (°C)"][self.start:]
         for idx,i in enumerate(data_focus):
             val = i
