@@ -17,6 +17,7 @@ def main_prog():
     data_gen - tells us if there is a need to (re)generate the interpolated data or not
     data_stat - tells us if there is a need to (re)create the summary and statistics of the input and output data
     data_visualize - tells us if there is a need to visualize the data or not
+    event_logger - tell us to log the events
     '''
     data_gen = config_object["data_gen"]
     data_stat = config_object["data_stat"]
