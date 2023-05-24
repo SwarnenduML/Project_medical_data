@@ -6,7 +6,7 @@ shifting : 4 # change the name to regression window
 folder_to_read : "C:/Users/sengupta/Downloads/erizt_data"
 folder_to_write : "C:/Users/sengupta/Downloads/erizt_data_generated"
 folder_to_plot : "C:/Users/sengupta/Downloads/plots"
-folder_for_event_input : "output" # accepted values: output, both.
+folder_for_event_input : "both" # accepted values: output, both.
                            # if both, then event log for input and output files are generated corresponding to output files.
 folder_for_event_output : "C:/Users/sengupta/Downloads/event"
 data_gen : False

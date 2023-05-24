@@ -29,9 +29,14 @@ class DataValidation:
         folder_to_write = self.event_folder
         if not os.path.exists(folder_to_write):
             os.mkdir(folder_to_write)
-        file_write = self.filename[self.filename.rfind('/')+1:-4]+"_event.csv"
-        self.report.to_csv(folder_to_write+"/"+file_write)
-        self.filename = folder_to_write+"/"+file_write
+        if self.filename[-10:]!='_event.csv':
+            file_write = self.filename[self.filename.rfind('/')+1:-4]+"_event.csv"
+            self.filename = folder_to_write + "/" + file_write
+        else:
+            file_write = self.filename
+        self.report.to_csv(self.filename)
+        file_excel = self.filename[:-4]+".xlsx"
+        self.report.to_excel(file_excel)
 
     def detect_event_HR(self):
         self.read_event_file()

@@ -4,7 +4,7 @@ import data_statistics
 warnings.filterwarnings("ignore")
 import yaml
 from list_files import ListFiles
-from data_validation import DataValidation
+from event_logger import EventLogger
 
 import new_data_generation
 import data_visual
@@ -80,19 +80,14 @@ def main_prog():
     if event:
         lst_files = ListFiles(config_object)
         file_to_operate = lst_files.files_with_col()
-        if config_object['folder_for_event_input'] =="output":
-            for x in file_to_operate:
-                dv = DataValidation(x,config_object['folder_for_event_output'])
-                dv.detect_event_HR() # Event logging for heart beat
-                high_t1 = config_object['high_T1']
-                low_t1 = config_object['low_T1']
-                dv.detect_event_T1(high = high_t1, low= low_t1) # Event logging for temperature 1
-                dv.detect_event_SPO2() # Event logging for SPO2
-                high_co2 = config_object['high_CO2']
-                low_co2 = config_object['low_CO2']
-                dv.detect_event_CO2(high=high_co2, low=low_co2) # Event logging for pressure for CO2
-                dv.detect_event_AWRR() # Event logging for AirWay Respiratory Rate
-                print(x +" event log generated")
+        if config_object['folder_for_event_input'] == 'output':
+            ev = EventLogger().prog_start(file_to_operate, config_object)
+        elif config_object['folder_for_event_input']== 'both':
+            ev1 = EventLogger().prog_start(file_to_operate,config_object)
+            file_to_operate = [x.replace('_generated','') for x in file_to_operate]
+            ev1 = EventLogger().prog_start(file_to_operate, config_object)
+
+
 
 
 if __name__ == '__main__':
