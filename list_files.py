@@ -6,6 +6,7 @@ class ListFiles:
     '''
 
     def __init__(self, config_object):
+        assert config_object["folder_for_event_input"] == "both" or config_object["folder_for_event_input"] == "output"
         self.folder = config_object["folder_to_write"]
         self.columns = ['HR (bpm)', 'T1 (°C)', 'SPO2 (%)', 'AWRR (rpm)', 'CO2 (mmHg)']
         self.columns.sort()
