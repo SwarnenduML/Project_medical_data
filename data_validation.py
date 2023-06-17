@@ -18,7 +18,7 @@ class DataValidation:
             self.start = int(self.data.shape[0]*0.1)
             self.means_start = self.data[:self.start].mean(axis = 0)
         self.report = self.data.copy()
-        self.report[self.event_col] = ''
+        self.report[self.data.columns] = ''
 
     def read_event_file(self):
         file_to_read = self.filename

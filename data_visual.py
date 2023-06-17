@@ -63,6 +63,7 @@ class DataVisual(object):
         '''
         sns.set_theme()
         data_plot = self.valid_data
+        data_plot = data_plot.loc[:, data_plot.columns != 'valid_cols']
         data_plot = data_plot.groupby(['filename']).mean()
         hist_plot = sns.histplot(data=data_plot[['percentage non-nulls before', 'percentage non-nulls after']],
                                  element='step',
@@ -243,7 +244,7 @@ class DataVisual(object):
         plt.close()
 
     def data_retention_per(self):
-        compiled_data = self.valid_data
+        compiled_data = self.valid_data[['filename','data retention']]
         compiled_data = compiled_data.groupby('filename').mean()
         compiled_data.reset_index(inplace=True, drop=True)
         sns.set_theme()
@@ -260,7 +261,7 @@ class DataVisual(object):
         plt.close()
 
     def data_gen_per(self):
-        compiled_data = self.valid_data
+        compiled_data = self.valid_data[['filename','data generation']]
         compiled_data = compiled_data.groupby('filename').mean()
         compiled_data.reset_index(inplace=True, drop=True)
         sns.set_theme()
@@ -277,7 +278,7 @@ class DataVisual(object):
         plt.close()
 
     def data_retention_per_atr(self):
-        compiled_data = self.valid_data
+        compiled_data = self.valid_data[['data retention', 'valid_cols']]
         compiled_data.reset_index(inplace=True, drop=True)
         compiled_data = compiled_data.groupby('valid_cols').mean()
         compiled_data.reset_index(inplace=True)
@@ -386,7 +387,7 @@ class DataVisual(object):
 
         :return:
         '''
-        data_inserted = self.data_inserted
+        data_inserted = self.data_inserted[['data_added','columns']]
         data_inserted = data_inserted.groupby('columns').mean()
         data_inserted['columns'] = data_inserted.index
         sns.set_theme()

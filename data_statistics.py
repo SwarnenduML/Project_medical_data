@@ -91,8 +91,8 @@ class DataStatistics(object):
                                                         'diff non null percentage', 'reason',
                                                         'data retention', 'data generation', 'data missing initial',
                                                         'data missing final'])
-                tmp_df_file = tmp_df_file.append(tmp_df_each_col, ignore_index=True)
-            each_file_summary_gen = each_file_summary_gen.append(tmp_df_file, ignore_index=True)
+                tmp_df_file = pd.concat([tmp_df_file, tmp_df_each_col], ignore_index=True)
+            each_file_summary_gen = pd.concat([each_file_summary_gen,tmp_df_file], ignore_index=True)
 
         print(time.time() - start_time)
 

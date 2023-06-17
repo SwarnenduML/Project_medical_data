@@ -73,7 +73,7 @@ def main_prog():
 
 
         # graph generation
-        data_visual_obj.data_inserted_col() # Number of columns in entirity in which data was entered
+        data_visual_obj.data_inserted_col() # Number of columns in entirety in which data was entered
         data_visual_obj.data_inserted_col_count() # Total number of data inserted per attribute
         data_visual_obj.data_inserted_col_count_mean() # Mean number of data inserted per attribute
         data_visual_obj.data_ins_atr() # Distribution of data inserted per attribute

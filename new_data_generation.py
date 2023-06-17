@@ -101,11 +101,11 @@ class NewDataGeneration(object):
                         final_data[c], count = data_colab_obj.colab(c)
                         tmp_df_each_col = pd.DataFrame([[file_to_read, c , count]],
                                                        columns=['filename', 'columns','data_added'])
-                        tmp_data_added = tmp_data_added.append(tmp_df_each_col, ignore_index=True)
+                        tmp_data_added = pd.concat([tmp_data_added, tmp_df_each_col], ignore_index=True)
                 tmp_data_added = tmp_data_added.groupby(['filename','columns']).sum()
-                if tmp_data_added.shape != (0,0):
+                if len(tmp_data_added)>0:
                     tmp_data_added[['filename', 'columns']] = tmp_data_added.index[0]
-                data_added = data_added.append(tmp_data_added,ignore_index=True)
+                    data_added = pd.concat([data_added, tmp_data_added], ignore_index=True)
             print(time.time() - start_time)
             final_data.to_csv(folder_to_write + "/" + file_to_read[:-4] + "_generated.csv")
             if not os.path.exists("C:/Users/sengupta/Downloads/erizt_data_generated_excel/"):
