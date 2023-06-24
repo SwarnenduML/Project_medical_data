@@ -9,10 +9,11 @@ folder_to_plot : "C:/Users/sengupta/Downloads/plots"
 folder_for_event_input : "both" # accepted values: output, both.
                            # if both, then event log for input and output files are generated corresponding to output files.
 folder_for_event_output : "C:/Users/sengupta/Downloads/event"
-data_gen : True
-data_stat : True
-data_visualize : True
-event_logger : True
+data_gen : False
+data_stat : False
+data_visualize : False
+event_logger : False
+ml_data_gen : True
 
 #### Visualization ####
 

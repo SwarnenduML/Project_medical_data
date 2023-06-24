@@ -5,6 +5,7 @@ warnings.filterwarnings("ignore")
 import yaml
 from list_files import ListFiles
 from event_logger import EventLogger
+from ml_data import ML_data_creation
 
 import new_data_generation
 import data_visual
@@ -23,6 +24,7 @@ def main_prog():
     data_stat = config_object["data_stat"]
     data_visualize = config_object["data_visualize"]
     event = config_object['event_logger']
+    ml_data_gen = config_object['ml_data_gen']
     if data_gen:
         # if there is a need to create data
         data_generator_obj = new_data_generation.NewDataGeneration(config_object)
@@ -86,8 +88,22 @@ def main_prog():
             ev1 = EventLogger().prog_start(file_to_operate,config_object)
             file_to_operate = [x.replace('_generated','') for x in file_to_operate]
             ev1 = EventLogger().prog_start(file_to_operate, config_object)
-
-
+    if ml_data_gen:
+        lst_files = ListFiles(config_object)
+        file_to_operate = lst_files.files_with_col()
+        print("Number of files taken "+ str(len(file_to_operate)))
+        if config_object['folder_for_event_input'] == 'output':
+            ev = ML_data_creation().prog_start(file_to_operate, config_object)
+        elif config_object['folder_for_event_input']== 'both':
+            ev1 = ML_data_creation().prog_start(file_to_operate,config_object)
+            ev1.to_excel(config_object['folder_for_event_output'] + "/master_data_generated.xlsx")
+            ev1.to_csv(config_object['folder_for_event_output'] + "/master_data_generated.csv")
+            print("Generated data done with shape " + str(ev1.shape))
+            file_to_operate = [x.replace('_generated','') for x in file_to_operate]
+            ev1 = ML_data_creation().prog_start(file_to_operate, config_object)
+            ev1.to_excel(config_object['folder_for_event_output'] + "/master_data.xlsx")
+            ev1.to_csv(config_object['folder_for_event_output'] + "/master_data.csv")
+            print("Input data done with shape " + str(ev1.shape))
 
 
 if __name__ == '__main__':
